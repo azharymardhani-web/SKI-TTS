@@ -1,0 +1,2382 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKI TTS CHALLENGE | Media Pembelajaran Sejarah Islam MTs</title>
+    
+    <!-- Tailwind CSS & Konfigurasi Tema -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        // Tema warna "Stone/Brown" untuk nuansa sejarah/historis
+                        brand: {
+                            50: '#fafaf9',
+                            100: '#f5f5f4',
+                            200: '#e7e5e4',
+                            300: '#d6d3d1',
+                            400: '#a8a29e',
+                            500: '#78716c',
+                            600: '#57534e',
+                            700: '#44403c',
+                            800: '#292524',
+                            900: '#1c1917',
+                            dark: '#0c0a09'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Font & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase SDK (Modular) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+        import { 
+            getFirestore, collection, doc, setDoc, getDocs, deleteDoc 
+        } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA3v19W60OQ5qfKYELEvmmkKaO-Gf6zHgs",
+            authDomain: "informatica-class.firebaseapp.com",
+            projectId: "informatica-class",
+            storageBucket: "informatica-class.firebasestorage.app",
+            messagingSenderId: "352869091816",
+            appId: "1:352869091816:web:5e6248ef4687bb842bbc5d",
+            measurementId: "G-2L234XNKLS"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.firebaseDb = db;
+        window.firebaseHelpers = { collection, doc, setDoc, getDocs, deleteDoc };
+    </script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        @media print {
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            body { background: white !important; color: black !important; }
+        }
+        .print-only { display: none; }
+        
+        .tts-cell {
+            width: 42px;
+            height: 42px;
+            text-align: center;
+            font-weight: 800;
+            text-transform: uppercase;
+            caret-color: transparent;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @media(max-width: 640px) {
+            .tts-cell { width: 34px; height: 34px; font-size: 0.85rem; }
+        }
+        
+        @keyframes popIn {
+            0% { transform: scale(0.7); opacity: 0; }
+            70% { transform: scale(1.15); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-pop { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        
+        @keyframes correctGlow {
+            0% { background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(252, 211, 77, 0.2)); transform: scale(1); box-shadow: 0 0 10px rgba(245, 158, 11, 0.2); }
+            50% { background: linear-gradient(135deg, rgba(245, 158, 11, 0.5), rgba(252, 211, 77, 0.4)); transform: scale(1.06); box-shadow: 0 0 20px rgba(245, 158, 11, 0.5); }
+            100% { background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(252, 211, 77, 0.2)); transform: scale(1); box-shadow: 0 0 10px rgba(245, 158, 11, 0.2); }
+        }
+        .animate-correct { animation: correctGlow 0.6s ease-in-out; }
+    </style>
+</head>
+<body class="bg-stone-50/50 text-slate-800 min-h-full flex flex-col selection:bg-brand-500 selection:text-white">
+
+    <header class="bg-gradient-to-r from-brand-900 via-brand-800 to-brand-700 text-white shadow-lg sticky top-0 z-40 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div id="headerLogo" class="flex items-center space-x-3 cursor-pointer group" onclick="router.navigate('home')">
+                <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center border border-white/25 backdrop-blur group-hover:bg-white/20 transition">
+                    <i class="fa-solid fa-scroll text-amber-400 text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-sm sm:text-base tracking-tight flex items-center gap-2">
+                        SKI TTS <span class="text-xs bg-amber-500 text-brand-900 px-2 py-0.5 rounded-full font-bold shadow-sm">Kumer (7, 8, 9)</span>
+                    </h1>
+                    <p class="text-[11px] text-brand-200" id="headerSchoolSub">MTs Negeri 14 Jakarta • Guru SKI</p>
+                </div>
+            </div>
+            <nav id="headerNav" class="flex items-center space-x-1 sm:space-x-3">
+                <button onclick="router.navigate('home')" class="px-3 py-2 rounded-lg text-sm font-medium hover:bg-white/10 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-house"></i> <span class="hidden md:inline">Beranda</span>
+                </button>
+                <button onclick="router.navigate('leaderboard')" class="px-3 py-2 rounded-lg text-sm font-medium hover:bg-white/10 transition flex items-center gap-1.5 text-amber-400">
+                    <i class="fa-solid fa-award"></i> <span class="hidden md:inline">Peringkat</span>
+                </button>
+                <button onclick="router.navigate('howToPlay')" class="px-3 py-2 rounded-lg text-sm font-medium hover:bg-white/10 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-circle-question"></i> <span class="hidden md:inline">Cara Bermain</span>
+                </button>
+                <button onclick="router.navigate('teacherLogin')" class="px-3 py-2 rounded-lg text-sm font-medium bg-brand-600/50 hover:bg-brand-600 border border-brand-500/50 transition flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-user-tie"></i> <span class="hidden sm:inline">Guru/Admin</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main id="app" class="flex-grow flex flex-col max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <!-- Tampilan Dinamis -->
+    </main>
+
+    <footer class="bg-brand-900 text-brand-200 py-8 border-t border-brand-800 text-sm mt-auto no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-lg bg-amber-500 flex items-center justify-center text-brand-900 font-bold shadow-md">
+                    <i class="fa-solid fa-landmark-dome"></i>
+                </div>
+                <div>
+                    <p class="font-semibold text-white">SKI TTS CHALLENGE</p>
+                    <p class="text-xs text-brand-300/80">Kurikulum Merdeka (Kelas 7, 8, 9) • Sejarah Kebudayaan Islam</p>
+                </div>
+            </div>
+            <div class="text-center md:text-right text-xs text-brand-300/80">
+                <p id="footerSchoolIdent">MTs Negeri 14 Jakarta • Guru Pengampu</p>
+                <p class="mt-1">© 2026 Seluruh hak cipta dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const GRADE_MATERIALS = {
+            7: ["Semua Materi", "Masa Jahiliyah", "Nabi Muhammad di Mekkah", "Nabi Muhammad di Madinah", "Khulafaur Rasyidin"],
+            8: ["Semua Materi", "Dinasti Umayyah", "Dinasti Abbasiyah", "Ilmuwan Muslim"],
+            9: ["Semua Materi", "Islam di Nusantara", "Wali Songo", "Kerajaan Islam di Jawa"]
+        };
+
+        const RAW_Q = `
+#7|Masa Jahiliyah
+Berhala terbesar yang disembah kaum Quraisy|HUBAL
+Agama tauhid yang dibawa Nabi Ibrahim sebelum Islam|HANIF
+Pasar tempat penyair beradu syair di Mekah|UKAZ
+Tahun kelahiran Nabi Muhammad disebut tahun|GAJAH
+Raja yang menyerang Ka'bah dengan pasukan gajah|ABRAHAH
+Masyarakat Arab sebelum Islam disebut masyarakat|JAHILIYAH
+
+#7|Nabi Muhammad di Mekkah
+Wahyu pertama turun di gua|HIRA
+Surah yang pertama kali diturunkan|ALALAQ
+Istri pertama Nabi Muhammad yang sangat mendukung dakwah|KHADIJAH
+Paman Nabi yang sangat memusuhi dakwahnya dan disebut dalam Al-Quran|ABULAHAB
+Peristiwa perjalanan malam Nabi Muhammad dari Mekah ke Yerusalem|ISRA
+Perjalanan naik Nabi ke Sidratul Muntaha|MIRAJ
+Sahabat nabi yang menemani hijrah|ABUBAKAR
+Gelar yang diberikan kepada Nabi karena dapat dipercaya|ALAMIN
+
+#7|Nabi Muhammad di Madinah
+Nama kota Madinah sebelum kedatangan Nabi|YATSRIB
+Suku asli Madinah yang berseteru namun didamaikan Nabi|AUSDANKHAZRAJ
+Masjid pertama yang dibangun Nabi saat tiba di Madinah|QUBA
+Perang besar pertama antara umat Islam dan kafir Quraisy|BADAR
+Perjanjian damai antara umat Islam dan Quraisy|HUDAIBIYAH
+Kaum muslimin yang hijrah dari Mekah ke Madinah|MUHAJIRIN
+Kaum muslimin Madinah yang menyambut kedatangan Nabi|ANSAR
+Peristiwa penaklukan kembali kota Mekah tanpa pertumpahan darah|FATHUMAKKAH
+
+#7|Khulafaur Rasyidin
+Khalifah pertama setelah wafatnya Nabi|ABUBAKAR
+Gelar Abu Bakar karena membenarkan peristiwa Isra Miraj|ASSHIDDIQ
+Khalifah kedua yang membebaskan Yerusalem dan Mesir|UMAR
+Gelar Umar bin Khattab yang berarti pembeda benar dan salah|ALFARUQ
+Sahabat yang mengumpulkan dan membukukan mushaf Al-Quran|UTSMAN
+Khalifah keempat yang merupakan menantu dan sepupu Nabi|ALI
+Pusat pemerintahan Islam pada masa Khalifah Ali dipindah ke|KUFAH
+
+#8|Dinasti Umayyah
+Pendiri Dinasti Umayyah|MUAWIYAH
+Pusat pemerintahan Bani Umayyah|DAMASKUS
+Khalifah yang terkenal sangat adil menyerupai Khulafaur Rasyidin|UMARBINABDULAZIZ
+Panglima Islam yang menaklukkan semenanjung Andalusia (Spanyol)|THARIQBINZIYAD
+Gubernur Irak yang terkenal keras dan kejam pada masa Umayyah|HAJJAJ
+Mata uang emas pertama yang dicetak pada masa Umayyah|DINAR
+
+#8|Dinasti Abbasiyah
+Pendiri Dinasti Bani Abbasiyah|ABULABBAS
+Pusat pemerintahan Bani Abbasiyah yang megah|BAGHDAD
+Khalifah yang membawa Abbasiyah pada masa kejayaan keemasan|HARUNARRASYID
+Lembaga perpustakaan, terjemahan, dan pusat riset di Baghdad|BAITULHIKMAH
+Dinasti Abbasiyah runtuh setelah dihancurkan oleh bangsa|MONGOL
+Nama khalifah setelah Harun Ar-Rasyid yang sangat mencintai ilmu pengetahuan|ALMAMUN
+
+#8|Ilmuwan Muslim
+Bapak kedokteran Muslim penulis kitab Al-Qanun fi Thib|IBNUSINA
+Ahli matematika penemu aljabar, algoritma dan angka nol|ALKHAWARIZMI
+Filsuf dan ilmuwan yang dikenal sebagai bapak ilmu sosiologi|IBNUKHALDUN
+Bapak ilmu kimia dari dunia Muslim|JABIRBINHAYYAN
+Tokoh ilmu optik yang menginspirasi pembuatan kamera|IBNUHAITHAM
+Filsuf besar dari Andalusia yang dikenal di Eropa sebagai Averroes|IBNURUSYD
+Dokter bedah Muslim yang menemukan alat-alat bedah|ALZAHAWI
+
+#9|Islam di Nusantara
+Teori yang menyebut Islam datang dari pedagang India|GUJARAT
+Teori yang menyebut Islam datang langsung dari jazirah Arab|MEKKAH
+Kerajaan Islam pertama yang berdiri di Indonesia|SAMUDERAPASAI
+Pendiri kerajaan Samudera Pasai|MARAHILU
+Gelar raja-raja yang memimpin di Samudera Pasai|SULTAN
+Kerajaan Islam pertama di pulau Jawa|DEMAK
+
+#9|Wali Songo
+Sunan yang makamnya di Gresik dan dianggap wali tertua|GRESIK
+Sunan Ampel memiliki nama asli Raden|RAHMAT
+Sunan Bonang menciptakan karya sastra mistik berupa|SULUK
+Sunan Kalijaga berdakwah secara damai menggunakan media kebudayaan|WAYANG
+Sunan Gunung Jati mendirikan kesultanan di wilayah Jawa Barat|CIREBON
+Sunan Kudus memiliki nama asli Ja'far|SHADIQ
+Wali Songo yang berdakwah di daerah Muria|SUNANMURIA
+
+#9|Kerajaan Islam di Jawa
+Raja dan pendiri Kesultanan Demak|RADENPATAH
+Kerajaan Islam yang didirikan oleh Sutawijaya di pedalaman Jawa|MATARAM
+Sultan terbesar Kesultanan Mataram yang menyerang Batavia|AGUNG
+Pahlawan dari Gowa Makassar yang dijuluki Ayam Jantan dari Timur|HASANUDDIN
+Sultan terbesar Banten yang berani melawan monopoli VOC|AGENGTIRTAYASA
+Kesultanan yang terletak di Ternate dan Tidore berada di kepulauan|MALUKU
+Kerajaan Islam di Sumatra yang terkenal dengan tokoh Sultan Iskandar Muda|ACEH
+`;
+
+        let EMBEDDED_QUESTIONS = [];
+        let currentK = 7, currentM = "";
+        let qCounter = 1;
+        
+        RAW_Q.trim().split('\n').forEach(line => {
+            line = line.trim();
+            if (!line) return;
+            if (line.startsWith('#')) {
+                let parts = line.substring(1).split('|');
+                currentK = parseInt(parts[0]);
+                currentM = parts[1];
+            } else {
+                let p = line.split('|');
+                if (p.length >= 2) {
+                   let jawabanBersih = p[1].replace(/[^A-Za-z]/g, '').toUpperCase();
+                   EMBEDDED_QUESTIONS.push({
+                       id: 'SKI' + currentK + '-' + String(qCounter++).padStart(4, '0'),
+                       kelas: currentK,
+                       bab: 1,
+                       materi: currentM,
+                       pertanyaan: p[0].trim(),
+                       jawaban: jawabanBersih,
+                       penjelasan: "Materi " + currentM + " (Kelas " + currentK + " MTs). Jawaban historis yang tepat adalah: " + p[1].trim().toUpperCase() + ".",
+                       kesulitan: (qCounter % 3 === 0) ? "Sulit" : (qCounter % 2 === 0 ? "Sedang" : "Mudah"),
+                       arah: (qCounter % 2 === 0) ? "menurun" : "mendatar"
+                   });
+                }
+            }
+        });
+
+        const State = {
+            currentView: 'home',
+            activeAdminTab: 'soal',
+            activeLeaderboardFilter: 'ALL',
+            activeResultFilter: 'ALL',
+            adminQuestionPage: 1,
+            adminRowsPerPage: 10,
+            settings: { schoolName: "MTs Negeri 14 Jakarta", teacherName: "Bapak Guru SKI" },
+            gameConfig: { studentName: '', studentClass: 'VII-A', studentNo: '', selectedSoalCount: 15, selectedTimerMin: 10 },
+            activeGame: null,
+            timerInterval: null,
+            remainingSeconds: 600,
+            score: 0,
+            hintsUsed: 0,
+            answersState: {},
+            startTime: null,
+            endTime: null,
+            currentUser: null,
+            cloudQuestions: JSON.parse(localStorage.getItem('ski_tts_questions_fb') || JSON.stringify(EMBEDDED_QUESTIONS)),
+            cloudResults: JSON.parse(localStorage.getItem('ski_tts_results_fb') || '[]'),
+            cloudTokens: JSON.parse(localStorage.getItem('ski_tts_tokens_fb') || JSON.stringify([
+                { token: 'SKI7SIRAH', kelas: 7, materi: 'Nabi Muhammad di Mekkah', soalCount: 10, timer: 10, title: 'Sirah Nabawiyah Dasar' },
+                { token: 'SKI8DINAS', kelas: 8, materi: 'Dinasti Abbasiyah', soalCount: 10, timer: 8, title: 'Kuis Dinasti Abbasiyah' },
+                { token: 'SKI9WALI', kelas: 9, materi: 'Wali Songo', soalCount: 12, timer: 12, title: 'Evaluasi Sejarah Wali Songo' }
+            ])),
+            cloudUsers: JSON.parse(localStorage.getItem('ski_tts_users_fb') || JSON.stringify([
+                { username: 'admin', password: 'admin123', role: 'admin', name: 'Admin Sejarah' },
+                { username: 'guru_ski', password: 'guru123', role: 'teacher', name: 'Bapak/Ibu Guru SKI' }
+            ])),
+            availableClasses: {
+                7: ['VII-A', 'VII-B', 'VII-C', 'VII-D'],
+                8: ['VIII-A', 'VIII-B', 'VIII-C', 'VIII-D'],
+                9: ['IX-A', 'IX-B', 'IX-C']
+            },
+            firebaseLoaded: false
+        };
+
+        async function syncSave(collectionName, docId, data) {
+            if (collectionName === 'questions') {
+                let idx = State.cloudQuestions.findIndex(q => q.id === docId);
+                if (idx >= 0) State.cloudQuestions[idx] = data; else State.cloudQuestions.push(data);
+                localStorage.setItem('ski_tts_questions_fb', JSON.stringify(State.cloudQuestions));
+            } else if (collectionName === 'results') {
+                let idx = State.cloudResults.findIndex(r => r.id === docId);
+                if (idx >= 0) State.cloudResults[idx] = data; else State.cloudResults.push(data);
+                localStorage.setItem('ski_tts_results_fb', JSON.stringify(State.cloudResults));
+            } else if (collectionName === 'tokens') {
+                let idx = State.cloudTokens.findIndex(t => t.token === docId);
+                if (idx >= 0) State.cloudTokens[idx] = data; else State.cloudTokens.push(data);
+                localStorage.setItem('ski_tts_tokens_fb', JSON.stringify(State.cloudTokens));
+            } else if (collectionName === 'users') {
+                let idx = State.cloudUsers.findIndex(u => u.username === docId);
+                if (idx >= 0) State.cloudUsers[idx] = data; else State.cloudUsers.push(data);
+                localStorage.setItem('ski_tts_users_fb', JSON.stringify(State.cloudUsers));
+            }
+
+            if (window.firebaseDb && window.firebaseHelpers) {
+                try {
+                    const docRef = window.firebaseHelpers.doc(window.firebaseDb, `ski_${collectionName}`, docId);
+                    await window.firebaseHelpers.setDoc(docRef, data);
+                } catch (error) {
+                    console.error("Gagal sinkron Firebase:", error);
+                }
+            }
+        }
+
+        async function syncDelete(collectionName, docId) {
+            if (collectionName === 'questions') {
+                State.cloudQuestions = State.cloudQuestions.filter(q => q.id !== docId);
+                localStorage.setItem('ski_tts_questions_fb', JSON.stringify(State.cloudQuestions));
+            } else if (collectionName === 'results') {
+                State.cloudResults = State.cloudResults.filter(r => r.id !== docId);
+                localStorage.setItem('ski_tts_results_fb', JSON.stringify(State.cloudResults));
+            } else if (collectionName === 'tokens') {
+                State.cloudTokens = State.cloudTokens.filter(t => t.token !== docId);
+                localStorage.setItem('ski_tts_tokens_fb', JSON.stringify(State.cloudTokens));
+            } else if (collectionName === 'users') {
+                State.cloudUsers = State.cloudUsers.filter(u => u.username !== docId);
+                localStorage.setItem('ski_tts_users_fb', JSON.stringify(State.cloudUsers));
+            }
+
+            if (window.firebaseDb && window.firebaseHelpers) {
+                try {
+                    const docRef = window.firebaseHelpers.doc(window.firebaseDb, `ski_${collectionName}`, docId);
+                    await window.firebaseHelpers.deleteDoc(docRef);
+                } catch (error) {
+                    console.error("Gagal hapus Firebase:", error);
+                }
+            }
+        }
+
+        async function loadDataFromFirebase() {
+             if (window.firebaseDb && window.firebaseHelpers) {
+                 try {
+                     const resultsSnap = await window.firebaseHelpers.getDocs(window.firebaseHelpers.collection(window.firebaseDb, "ski_results"));
+                     if(!resultsSnap.empty) {
+                        let resData = [];
+                        resultsSnap.forEach((doc) => resData.push(doc.data()));
+                        State.cloudResults = resData;
+                        localStorage.setItem('ski_tts_results_fb', JSON.stringify(resData));
+                     }
+
+                     const questionsSnap = await window.firebaseHelpers.getDocs(window.firebaseHelpers.collection(window.firebaseDb, "ski_questions"));
+                     if(!questionsSnap.empty) {
+                        let qData = [];
+                        questionsSnap.forEach((doc) => qData.push(doc.data()));
+                        State.cloudQuestions = qData;
+                        localStorage.setItem('ski_tts_questions_fb', JSON.stringify(qData));
+                     }
+
+                     const tokensSnap = await window.firebaseHelpers.getDocs(window.firebaseHelpers.collection(window.firebaseDb, "ski_tokens"));
+                     if(!tokensSnap.empty) {
+                        let tData = [];
+                        tokensSnap.forEach((doc) => tData.push(doc.data()));
+                        State.cloudTokens = tData;
+                        localStorage.setItem('ski_tts_tokens_fb', JSON.stringify(tData));
+                     }
+                     State.firebaseLoaded = true;
+                     if(State.currentView === 'leaderboard' || State.currentView === 'teacherDashboard') renderApp();
+                 } catch(err) {
+                     console.log("Gagal memuat dari Firebase, menggunakan lokal.");
+                 }
+             }
+        }
+
+        function getActiveQuestions() { return State.cloudQuestions; }
+        function getActiveResults() { return State.cloudResults; }
+        function getActiveTokens() { return State.cloudTokens; }
+        function getActiveUsers() { return State.cloudUsers; }
+
+        const router = {
+            navigate: function(viewName) {
+                if (State.currentView === 'game' && viewName !== 'result') {
+                    alertBox("Akses Terkunci", "Kamu sedang dalam sesi pengerjaan ujian! Selesaikan terlebih dahulu.");
+                    return;
+                }
+                State.currentView = viewName;
+                if (viewName !== 'game' && State.timerInterval) clearInterval(State.timerInterval);
+                renderApp();
+                window.scrollTo(0, 0);
+            }
+        };
+
+        function renderApp() {
+            const appEl = document.getElementById('app');
+            document.getElementById('headerSchoolSub').innerText = `${State.settings.schoolName} • ${State.settings.teacherName}`;
+            document.getElementById('footerSchoolIdent').innerText = `${State.settings.schoolName} • ${State.settings.teacherName}`;
+
+            const headerNav = document.getElementById('headerNav');
+            if (headerNav) headerNav.style.display = (State.currentView === 'game') ? 'none' : 'flex';
+
+            switch(State.currentView) {
+                case 'home': appEl.innerHTML = renderHomeView(); break;
+                case 'leaderboard': appEl.innerHTML = renderLeaderboardView(); break;
+                case 'howToPlay': appEl.innerHTML = renderHowToPlayView(); break;
+                case 'setup': appEl.innerHTML = renderSetupView(); break;
+                case 'game': appEl.innerHTML = renderGameView(); initGameEngine(); break;
+                case 'result': appEl.innerHTML = renderResultView(); break;
+                case 'teacherLogin': appEl.innerHTML = renderTeacherLoginView(); break;
+                case 'teacherDashboard': appEl.innerHTML = renderTeacherDashboardView(); break;
+                default: appEl.innerHTML = renderHomeView();
+            }
+        }
+
+        function renderHomeView() {
+            return `
+                <div class="space-y-10 py-6">
+                    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-900 via-brand-800 to-amber-900 text-white shadow-2xl p-8 sm:p-12 md:p-16 border border-brand-700/50">
+                        <div class="absolute -right-10 -bottom-10 opacity-10 text-9xl pointer-events-none">
+                            <i class="fa-solid fa-scroll"></i>
+                        </div>
+                        <div class="relative z-10 max-w-2xl space-y-6">
+                            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/30 text-amber-200 text-xs font-semibold backdrop-blur border border-amber-400/30">
+                                <i class="fa-solid fa-moon"></i> Kurikulum Merdeka (SKI MTs)
+                            </div>
+                            <h1 class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-tight text-white">
+                                SEJARAH ISLAM <span class="text-amber-400">TTS CHALLENGE</span>
+                            </h1>
+                            <p class="text-lg text-brand-100 font-medium">
+                                "Uji Pengetahuanmu. Pahami Sejarah. Teladani Tokoh Islam." Media pembelajaran interaktif berbasis gamifikasi untuk mapel SKI.
+                            </p>
+                            <div class="flex flex-wrap gap-4 pt-4">
+                                <button onclick="router.navigate('setup')" class="px-8 py-4 bg-amber-500 hover:bg-amber-600 text-brand-900 font-black rounded-xl shadow-lg hover:shadow-amber-500/30 transition transform hover:-translate-y-0.5 flex items-center gap-3 text-lg">
+                                    <i class="fa-solid fa-play"></i> MULAI KUIS
+                                </button>
+                                <button onclick="router.navigate('leaderboard')" class="px-6 py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg transition flex items-center gap-2 border border-brand-500">
+                                    <i class="fa-solid fa-award"></i> Peringkat Siswa
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-brand-100 hover:shadow-md transition">
+                            <div class="w-12 h-12 rounded-xl bg-brand-100 text-brand-600 flex items-center justify-center text-xl mb-4">
+                                <i class="fa-solid fa-landmark-dome"></i>
+                            </div>
+                            <h3 class="font-bold text-lg text-slate-900 mb-2">Materi Sejarah Lengkap</h3>
+                            <p class="text-sm text-slate-600">Mencakup Khulafaur Rasyidin, Dinasti Abbasiyah/Umayyah, hingga Wali Songo.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-brand-100 hover:shadow-md transition">
+                            <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl mb-4">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            </div>
+                            <h3 class="font-bold text-lg text-slate-900 mb-2">TTS Generator Pintar</h3>
+                            <p class="text-sm text-slate-600">Soal menyilang secara dinamis menyesuaikan paket dan token yang diberikan guru.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-brand-100 hover:shadow-md transition">
+                            <div class="w-12 h-12 rounded-xl bg-stone-100 text-stone-600 flex items-center justify-center text-xl mb-4">
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                            </div>
+                            <h3 class="font-bold text-lg text-slate-900 mb-2">Sinkronisasi Cloud</h3>
+                            <p class="text-sm text-slate-600">Otomatis menyimpan skor dan progres siswa ke Firebase secara aman dan real-time.</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderLeaderboardView() {
+            let results = getActiveResults();
+            results.sort((a,b) => (b.score !== a.score) ? (b.score - a.score) : ((a.timeSpent || 0) - (b.timeSpent || 0)));
+            
+            let filtered = results;
+            let filterVal = State.activeLeaderboardFilter || 'ALL';
+
+            if (filterVal === '7') filtered = results.filter(r => r.class && r.class.startsWith('VII-'));
+            else if (filterVal === '8') filtered = results.filter(r => r.class && r.class.startsWith('VIII-'));
+            else if (filterVal === '9') filtered = results.filter(r => r.class && r.class.startsWith('IX-'));
+            else if (filterVal !== 'ALL') filtered = results.filter(r => r.class === filterVal);
+
+            return `
+                <div class="max-w-4xl mx-auto space-y-6 py-4 w-full">
+                    <div class="bg-white p-8 rounded-3xl shadow-sm border border-brand-100 space-y-6">
+                        <div class="flex flex-col sm:flex-row items-center justify-between border-b border-brand-50 pb-4 gap-4">
+                            <div>
+                                <h2 class="text-2xl font-black text-brand-900 flex items-center gap-3">
+                                    <i class="fa-solid fa-award text-amber-500"></i> PERINGKAT SISWA
+                                </h2>
+                                <p class="text-sm text-slate-500">Daftar nilai tertinggi mata pelajaran Sejarah Kebudayaan Islam.</p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <select id="leaderboardFilter" onchange="filterLeaderboard(this.value)" class="px-3 py-2 bg-brand-50 hover:bg-brand-100 text-brand-800 font-bold rounded-xl text-xs border border-brand-200 focus:outline-none">
+                                    <option value="ALL" ${filterVal === 'ALL' ? 'selected' : ''}>Semua Angkatan & Kelas</option>
+                                    <option value="7" ${filterVal === '7' ? 'selected' : ''}>Angkatan Kelas 7</option>
+                                    <option value="8" ${filterVal === '8' ? 'selected' : ''}>Angkatan Kelas 8</option>
+                                    <option value="9" ${filterVal === '9' ? 'selected' : ''}>Angkatan Kelas 9</option>
+                                    <optgroup label="Per Kelas">
+                                        ${[7,8,9].flatMap(g => State.availableClasses[g] || []).map(c => `<option value="${c}" ${filterVal === c ? 'selected' : ''}>Kelas ${c}</option>`).join('')}
+                                    </optgroup>
+                                </select>
+                                <button onclick="router.navigate('home')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition">
+                                    <i class="fa-solid fa-arrow-left mr-1"></i> Kembali
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs sm:text-sm text-slate-700">
+                                <thead class="bg-brand-50 text-brand-800 uppercase font-bold border-b border-brand-100">
+                                    <tr>
+                                        <th class="p-3.5 text-center w-16">Rank</th>
+                                        <th class="p-3.5">Nama Siswa</th>
+                                        <th class="p-3.5">Kelas</th>
+                                        <th class="p-3.5 text-center">Skor</th>
+                                        <th class="p-3.5 text-center">Waktu</th>
+                                        <th class="p-3.5 text-center">Akurasi</th>
+                                        <th class="p-3.5">Gelar / Predikat</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="leaderboardTableBody" class="divide-y divide-brand-50 font-medium">
+                                    ${renderLeaderboardRows(filtered)}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.filterLeaderboard = function(filterVal) {
+            State.activeLeaderboardFilter = filterVal;
+            renderApp();
+        };
+
+        function renderLeaderboardRows(results) {
+            if (!results.length) return `<tr><td colspan="7" class="p-8 text-center text-slate-400 italic">Belum ada data nilai yang sesuai.</td></tr>`;
+            return results.map((r, i) => {
+                let m = Math.floor((r.timeSpent || 0) / 60);
+                let s = (r.timeSpent || 0) % 60;
+                let timeStr = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+                return `
+                <tr class="hover:bg-brand-50/50 transition">
+                    <td class="p-3.5 text-center font-black ${i === 0 ? 'text-amber-500 text-base' : i === 1 ? 'text-slate-400 text-base' : i === 2 ? 'text-amber-700 text-base' : 'text-brand-600'}">
+                        ${i === 0 ? '🥇 1' : i === 1 ? '🥈 2' : i === 2 ? '🥉 3' : i+1}
+                    </td>
+                    <td class="p-3.5 font-bold text-slate-900">${r.name}</td>
+                    <td class="p-3.5"><span class="px-2.5 py-1 rounded-lg bg-brand-100 text-brand-800 font-bold text-xs">${r.class}</span></td>
+                    <td class="p-3.5 text-center font-black text-amber-500 text-base">${r.score}</td>
+                    <td class="p-3.5 text-center font-mono font-bold text-slate-500">${timeStr}</td>
+                    <td class="p-3.5 text-center font-bold text-emerald-600">${r.accuracy}%</td>
+                    <td class="p-3.5 font-semibold text-brand-700">${r.badge}</td>
+                </tr>
+            `;
+            }).join('');
+        }
+
+        function renderHowToPlayView() {
+            return `
+                <div class="max-w-3xl mx-auto space-y-6 py-4 w-full">
+                    <div class="bg-white p-8 rounded-3xl shadow-sm border border-brand-100 space-y-6">
+                        <div class="flex items-center justify-between border-b border-brand-50 pb-4">
+                            <h2 class="text-2xl font-black text-brand-900 flex items-center gap-3">
+                                <i class="fa-solid fa-circle-question text-amber-500"></i> CARA BERMAIN
+                            </h2>
+                            <button onclick="router.navigate('home')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition">Kembali</button>
+                        </div>
+                        <div class="space-y-4 text-sm text-slate-600">
+                            <div class="flex items-start gap-3 p-4 bg-brand-50 rounded-2xl border border-brand-100">
+                                <span class="w-8 h-8 rounded-xl bg-brand-600 text-white font-bold flex items-center justify-center shrink-0">1</span>
+                                <div>
+                                    <h3 class="font-bold text-brand-900">Masukkan Token atau Latihan Bebas</h3>
+                                    <p class="text-xs text-brand-700 mt-0.5">Gunakan token dari bapak/ibu guru untuk ujian, atau pilih latihan mandiri untuk memperlancar SKI.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3 p-4 bg-brand-50 rounded-2xl border border-brand-100">
+                                <span class="w-8 h-8 rounded-xl bg-brand-600 text-white font-bold flex items-center justify-center shrink-0">2</span>
+                                <div>
+                                    <h3 class="font-bold text-brand-900">Isi Identitas Diri</h3>
+                                    <p class="text-xs text-brand-700 mt-0.5">Pastikan mengisi Nama, Kelas, dan No Absen agar nilai tercatat benar di papan peringkat.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3 p-4 bg-brand-50 rounded-2xl border border-brand-100">
+                                <span class="w-8 h-8 rounded-xl bg-brand-600 text-white font-bold flex items-center justify-center shrink-0">3</span>
+                                <div>
+                                    <h3 class="font-bold text-brand-900">Kerjakan TTS Sejarah</h3>
+                                    <p class="text-xs text-brand-700 mt-0.5">Klik kotak untuk mengisi jawaban mendatar/menurun sesuai petunjuk tokoh atau peristiwa sejarah.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderSetupView() {
+            const tokens = getActiveTokens();
+            let defaultToken = tokens[0] || { token: 'SKI7SIRAH', kelas: 7, soalCount: 10, timer: 10, materi: 'Semua Materi' };
+            let classList = State.availableClasses[defaultToken.kelas] || ['VII-A', 'VII-B', 'VII-C', 'VII-D'];
+
+            return `
+                <div class="max-w-md mx-auto bg-white p-8 rounded-3xl shadow-lg border border-brand-100 space-y-6 my-auto w-full">
+                    <div class="text-center space-y-2">
+                        <div class="w-16 h-16 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center mx-auto text-2xl shadow-inner">
+                            <i class="fa-solid fa-scroll"></i>
+                        </div>
+                        <h2 class="text-2xl font-black text-brand-900">MULAI KUIS SKI</h2>
+                        <p class="text-xs text-slate-500">Pilih kode token evaluasi atau mulai mode latihan sejarah.</p>
+                    </div>
+
+                    <form onsubmit="handleStartGame(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-brand-800 mb-1">Pilih Token Penugasan</label>
+                            <select id="setupTokenSelect" onchange="onTokenSelectChange(this.value)" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-bold bg-slate-50 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                                ${tokens.map(t => `<option value="${t.token}">[${t.token}] ${t.title} (${t.soalCount} Soal)</option>`).join('')}
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-brand-800 mb-1">Jumlah Soal</label>
+                            <select id="setupSoalCount" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-bold bg-slate-50 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                                <option value="5">5 Soal (Singkat)</option>
+                                <option value="10" selected>10 Soal (Standar)</option>
+                                <option value="15">15 Soal (Menengah)</option>
+                                <option value="20">20 Soal (Panjang)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-brand-800 mb-1">Nama Lengkap</label>
+                            <input type="text" id="setupStudentName" required class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:bg-white focus:ring-2 focus:ring-brand-500 focus:outline-none" placeholder="Masukkan nama...">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-brand-800 mb-1">Kelas</label>
+                                <select id="setupStudentClass" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-bold bg-slate-50 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                                    ${classList.map(c => `<option value="${c}">${c}</option>`).join('')}
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-brand-800 mb-1">No. Absen</label>
+                                <input type="number" id="setupStudentNo" min="1" max="50" required class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:bg-white focus:ring-2 focus:ring-brand-500 focus:outline-none" placeholder="1">
+                            </div>
+                        </div>
+                        <button type="submit" class="w-full py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg transition text-base flex items-center justify-center gap-2 mt-2">
+                            <i class="fa-solid fa-play"></i> MULAI UJIAN SEKARANG
+                        </button>
+                    </form>
+                </div>
+            `;
+        }
+
+        window.onTokenSelectChange = function(tokenVal) {
+            let tokens = getActiveTokens();
+            let found = tokens.find(t => t.token === tokenVal);
+            if (found) {
+                let classList = State.availableClasses[found.kelas] || ['VII-A','VII-B','VII-C','VII-D'];
+                let classSel = document.getElementById('setupStudentClass');
+                if (classSel) classSel.innerHTML = classList.map(c => `<option value="${c}">${c}</option>`).join('');
+
+                let soalSel = document.getElementById('setupSoalCount');
+                if (soalSel && found.soalCount) soalSel.value = found.soalCount;
+            }
+        };
+
+        window.handleStartGame = function(e) {
+            e.preventDefault();
+            State.gameConfig.studentName = document.getElementById('setupStudentName').value.trim();
+            State.gameConfig.studentClass = document.getElementById('setupStudentClass').value;
+            State.gameConfig.studentNo = document.getElementById('setupStudentNo').value.trim();
+            State.gameConfig.selectedSoalCount = parseInt(document.getElementById('setupSoalCount').value) || 10;
+
+            let tokenVal = document.getElementById('setupTokenSelect')?.value;
+            let tokens = getActiveTokens();
+            let found = tokens.find(t => t.token === tokenVal);
+            let grade = found ? found.kelas : 7;
+            let timerMin = found ? found.timer : 10;
+            let materiFilter = found ? found.materi : 'Semua Materi';
+            let specificQuestionIds = found ? found.questionIds : null;
+            
+            buildNormalTTSPuzzle(grade, State.gameConfig.selectedSoalCount, timerMin, materiFilter, specificQuestionIds);
+            router.navigate('game');
+        };
+
+        function buildNormalTTSPuzzle(grade, count, timerMin, materiFilter = 'Semua Materi', specificQuestionIds = null) {
+            const allQuestions = getActiveQuestions();
+            let filtered = allQuestions.filter(q => Number(q.kelas) === Number(grade));
+            
+            if (specificQuestionIds && specificQuestionIds.length > 0) {
+                let manualFiltered = filtered.filter(q => specificQuestionIds.includes(q.id));
+                if (manualFiltered.length > 0) filtered = manualFiltered;
+            } else if (materiFilter && materiFilter !== 'Semua Materi') {
+                let subFiltered = filtered.filter(q => q.materi === materiFilter);
+                if (subFiltered.length >= 3) filtered = subFiltered;
+            }
+
+            let uniquePool = [];
+            let seenAnswers = new Set();
+            let seenQuestions = new Set();
+            for (let q of filtered) {
+                let cleanAns = (q.jawaban || '').replace(/[^A-Z]/g, '').toUpperCase();
+                let cleanQ = (q.pertanyaan || '').trim().toLowerCase();
+                if (cleanAns.length >= 2 && !seenAnswers.has(cleanAns) && !seenQuestions.has(cleanQ)) {
+                    seenAnswers.add(cleanAns);
+                    seenQuestions.add(cleanQ);
+                    uniquePool.push({ ...q, jawaban: cleanAns });
+                }
+            }
+            if (uniquePool.length < count) {
+                for (let q of filtered) {
+                    let cleanAns = (q.jawaban || '').replace(/[^A-Z]/g, '').toUpperCase();
+                    if (cleanAns.length >= 2 && !seenAnswers.has(cleanAns)) {
+                        seenAnswers.add(cleanAns);
+                        uniquePool.push({ ...q, jawaban: cleanAns });
+                    }
+                }
+            }
+            uniquePool.sort(() => Math.random() - 0.5);
+
+            let selectedQuestions = uniquePool.slice(0, count);
+            const MAX_GRID = 70;
+            let grid = Array(MAX_GRID).fill(0).map(() => Array(MAX_GRID).fill(''));
+            let placedWords = [];
+            let usedIds = new Set();
+
+            if (selectedQuestions.length > 0) {
+                let q0 = selectedQuestions[0];
+                let word0 = q0.jawaban;
+                let startR = Math.floor(MAX_GRID / 2);
+                let startC = Math.floor(MAX_GRID / 2) - Math.floor(word0.length / 2);
+                
+                let coords0 = [];
+                for(let i=0; i<word0.length; i++) {
+                    grid[startR][startC + i] = word0[i];
+                    coords0.push({r: startR, c: startC + i});
+                }
+                
+                placedWords.push({ ...q0, word: word0, direction: 'mendatar', coords: coords0, number: 1 });
+                usedIds.add(q0.id);
+            }
+
+            let questionNumberCounter = 2;
+            let attempts = 0;
+
+            while (placedWords.length < selectedQuestions.length && attempts < 1500) {
+                attempts++;
+                let bestFit = null;
+
+                for (let q of selectedQuestions) {
+                    if (usedIds.has(q.id)) continue;
+                    let word = q.jawaban;
+
+                    for (let pw of placedWords) {
+                        for (let pIdx = 0; pIdx < pw.word.length; pIdx++) {
+                            let targetChar = pw.word[pIdx];
+                            let targetCoord = pw.coords[pIdx];
+
+                            for (let wIdx = 0; wIdx < word.length; wIdx++) {
+                                if (word[wIdx] === targetChar) {
+                                    let newDir = pw.direction === 'mendatar' ? 'menurun' : 'mendatar';
+                                    let startR_new = newDir === 'menurun' ? targetCoord.r - wIdx : targetCoord.r;
+                                    let startC_new = newDir === 'mendatar' ? targetCoord.c - wIdx : targetCoord.c;
+
+                                    if (canPlaceWordNormal(grid, word, startR_new, startC_new, newDir, MAX_GRID)) {
+                                        bestFit = { q: q, word: word, dir: newDir, r: startR_new, c: startC_new };
+                                        break;
+                                    }
+                                }
+                            }
+                            if (bestFit) break;
+                        }
+                        if (bestFit) break;
+                    }
+                    if (bestFit) break;
+                }
+
+                if (bestFit) {
+                    let coords = [];
+                    for(let k = 0; k < bestFit.word.length; k++) {
+                        let rr = bestFit.dir === 'menurun' ? bestFit.r + k : bestFit.r;
+                        let cc = bestFit.dir === 'mendatar' ? bestFit.c + k : bestFit.c;
+                        grid[rr][cc] = bestFit.word[k];
+                        coords.push({r: rr, c: cc});
+                    }
+                    placedWords.push({ ...bestFit.q, word: bestFit.word, direction: bestFit.dir, coords: coords, number: questionNumberCounter++ });
+                    usedIds.add(bestFit.q.id);
+                } else {
+                    break;
+                }
+            }
+
+            if (placedWords.length < selectedQuestions.length) {
+                let unplaced = selectedQuestions.filter(q => !usedIds.has(q.id));
+                let fallbackR = 2;
+                unplaced.forEach(q => {
+                    let word = q.jawaban;
+                    let coords = [];
+                    for (let k = 0; k < word.length; k++) {
+                        if (fallbackR < MAX_GRID && k < MAX_GRID) {
+                            grid[fallbackR][k] = word[k];
+                            coords.push({r: fallbackR, c: k});
+                        }
+                    }
+                    if (coords.length > 0) {
+                        placedWords.push({ ...q, word: word, direction: 'mendatar', coords: coords, number: questionNumberCounter++ });
+                        fallbackR += 3;
+                    }
+                });
+            }
+
+            let minR = MAX_GRID, maxR = 0, minC = MAX_GRID, maxC = 0;
+            for (let r = 0; r < MAX_GRID; r++) {
+                for (let c = 0; c < MAX_GRID; c++) {
+                    if (grid[r][c] !== '') {
+                        if (r < minR) minR = r;
+                        if (r > maxR) maxR = r;
+                        if (c < minC) minC = c;
+                        if (c > maxC) maxC = c;
+                    }
+                }
+            }
+
+            minR = Math.max(0, minR - 1);
+            maxR = Math.min(MAX_GRID - 1, maxR + 1);
+            minC = Math.max(0, minC - 1);
+            maxC = Math.min(MAX_GRID - 1, maxC + 1);
+
+            let croppedRows = maxR - minR + 1;
+            let croppedCols = maxC - minC + 1;
+            let croppedGrid = Array(croppedRows).fill(0).map(() => Array(croppedCols).fill(''));
+
+            for (let r = minR; r <= maxR; r++) {
+                for (let c = minC; c <= maxC; c++) {
+                    croppedGrid[r - minR][c - minC] = grid[r][c];
+                }
+            }
+
+            placedWords.forEach(w => {
+                w.coords = w.coords.map(coord => ({ r: coord.r - minR, c: coord.c - minC }));
+            });
+
+            let cellToNumberMap = {};
+            let currentNum = 1;
+            placedWords.sort((a, b) => a.coords[0].r - b.coords[0].r || a.coords[0].c - b.coords[0].c);
+            
+            placedWords.forEach(w => {
+                let startKey = `${w.coords[0].r}_${w.coords[0].c}`;
+                if (!cellToNumberMap[startKey]) cellToNumberMap[startKey] = currentNum++;
+                w.number = cellToNumberMap[startKey];
+            });
+
+            State.activeGame = { grid: croppedGrid, gridRows: croppedRows, gridCols: croppedCols, words: placedWords };
+            State.answersState = {};
+            State.score = 0;
+            State.hintsUsed = 0;
+            State.remainingSeconds = timerMin * 60;
+            State.startTime = new Date();
+        }
+
+        function canPlaceWordNormal(grid, word, startR, startC, direction, size) {
+            for(let i=0; i<word.length; i++) {
+                let r = direction === 'menurun' ? startR + i : startR;
+                let c = direction === 'mendatar' ? startC + i : startC;
+                if (r < 0 || r >= size || c < 0 || c >= size) return false;
+                let current = grid[r][c];
+                if (current !== '' && current !== word[i]) return false;
+
+                if (direction === 'mendatar') {
+                    if (current === '') {
+                        if (r - 1 >= 0 && grid[r-1][c] !== '') return false;
+                        if (r + 1 < size && grid[r+1][c] !== '') return false;
+                    }
+                    if (i === 0 && c - 1 >= 0 && grid[r][c-1] !== '') return false;
+                    if (i === word.length - 1 && c + 1 < size && grid[r][c+1] !== '') return false;
+                } else {
+                    if (current === '') {
+                        if (c - 1 >= 0 && grid[r][c-1] !== '') return false;
+                        if (c + 1 < size && grid[r][c+1] !== '') return false;
+                    }
+                    if (i === 0 && r - 1 >= 0 && grid[r-1][c] !== '') return false;
+                    if (i === word.length - 1 && r + 1 < size && grid[r+1][c] !== '') return false;
+                }
+            }
+            return true;
+        }
+
+        function renderGameView() {
+            return `
+                <div class="space-y-6 w-full">
+                    <div class="bg-white p-4 rounded-3xl shadow-md border border-brand-100 flex flex-wrap items-center justify-between gap-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-600 to-brand-800 text-white flex items-center justify-center font-bold text-xl shadow-md animate-pop">
+                                <i class="fa-solid fa-feather-pointed"></i>
+                            </div>
+                            <div>
+                                <h2 class="font-black text-brand-900 text-base">EVALUASI SKI</h2>
+                                <p class="text-xs text-brand-600 font-medium">Siswa: <span class="font-bold text-brand-800">${State.gameConfig.studentName}</span> (${State.gameConfig.studentClass})</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <div class="bg-brand-50 px-4 py-2.5 rounded-2xl text-center border border-brand-200 shadow-inner">
+                                <div class="text-[10px] uppercase font-bold text-brand-700">Waktu Sisa</div>
+                                <div id="timerDisplay" class="text-lg font-black text-rose-600">10:00</div>
+                            </div>
+                            <div class="bg-brand-50 px-4 py-2.5 rounded-2xl text-center border border-brand-200 shadow-inner">
+                                <div class="text-[10px] uppercase font-bold text-brand-700">Nilai</div>
+                                <div id="scoreDisplay" class="text-lg font-black text-amber-500 transition-all duration-300">0</div>
+                            </div>
+                            <button onclick="finishGameConfirm()" class="px-5 py-3 bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-700 hover:to-brand-800 text-white font-black rounded-2xl shadow-lg hover:shadow-brand-500/30 transition transform hover:-translate-y-0.5 text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-flag-checkered"></i> Selesai
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                        <div class="lg:col-span-7 bg-white p-8 rounded-3xl shadow-sm border border-brand-100 flex flex-col items-center overflow-x-auto relative">
+                            <div class="flex justify-between w-full mb-6 items-center">
+                                <div class="text-xs font-black text-brand-700 uppercase tracking-wider flex items-center gap-2">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span> Papan TTS SKI
+                                </div>
+                                <div class="flex gap-2">
+                                    <button onclick="useHint()" class="px-4 py-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-brand-900 rounded-2xl text-xs font-black transition flex items-center gap-2 shadow-md border border-amber-300">
+                                        <i class="fa-solid fa-lightbulb"></i> BANTUAN (<span id="hintCount">3</span>)
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="ttsGridContainer" class="p-4 bg-brand-900/5 rounded-3xl border border-brand-100 inline-block shadow-inner backdrop-blur-sm max-h-[550px] overflow-auto"></div>
+                            <p class="text-[11px] font-medium text-slate-500 mt-4 text-center">💡 Klik kotak untuk mengisi jawaban. Kotak akan menyala emas jika jawaban tokoh/sejarah benar!</p>
+                        </div>
+
+                        <div class="lg:col-span-5 space-y-6">
+                            <div class="bg-white p-6 rounded-3xl shadow-sm border border-brand-100 max-h-72 overflow-y-auto">
+                                <h3 class="font-black text-brand-900 text-sm mb-3 flex items-center gap-2 border-b border-brand-50 pb-3">
+                                    <i class="fa-solid fa-arrow-right text-amber-500"></i> MENDATAR
+                                </h3>
+                                <div id="cluesMendatar" class="space-y-2.5 text-xs"></div>
+                            </div>
+                            <div class="bg-white p-6 rounded-3xl shadow-sm border border-brand-100 max-h-72 overflow-y-auto">
+                                <h3 class="font-black text-brand-900 text-sm mb-3 flex items-center gap-2 border-b border-brand-50 pb-3">
+                                    <i class="fa-solid fa-arrow-down text-emerald-500"></i> MENURUN
+                                </h3>
+                                <div id="cluesMenurun" class="space-y-2.5 text-xs"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function initGameEngine() {
+            renderTTSBoard();
+            renderClues();
+            startTimer();
+        }
+
+        function renderTTSBoard() {
+            const container = document.getElementById('ttsGridContainer');
+            if (!container || !State.activeGame) return;
+            const { grid, gridRows, gridCols, words } = State.activeGame;
+
+            let cellLabels = {};
+            words.forEach(w => {
+                if (w.coords.length > 0) {
+                    let startCoordKey = `${w.coords[0].r}_${w.coords[0].c}`;
+                    if (!cellLabels[startCoordKey]) cellLabels[startCoordKey] = [];
+                    cellLabels[startCoordKey].push(w.number);
+                }
+            });
+
+            let html = '<table class="border-collapse"><tbody>';
+            for (let r = 0; r < gridRows; r++) {
+                html += '<tr>';
+                for (let c = 0; c < gridCols; c++) {
+                    let isLetter = grid[r][c] !== '';
+                    if (isLetter) {
+                        let key = `${r}_${c}`;
+                        let val = State.answersState[key] || '';
+                        let numbersAtCell = cellLabels[key];
+
+                        let isCellCorrect = false;
+                        words.forEach(w => {
+                            let formed = '';
+                            w.coords.forEach(coord => formed += (State.answersState[`${coord.r}_${coord.c}`] || ''));
+                            if (formed === w.word && w.coords.some(coord => coord.r === r && coord.c === c)) isCellCorrect = true;
+                        });
+
+                        let cellBg = isCellCorrect 
+                            ? 'bg-gradient-to-br from-amber-100 to-amber-200 border-amber-500 text-amber-900 shadow-md animate-correct' 
+                            : val !== '' 
+                                ? 'bg-brand-50 border-brand-400 text-brand-900 shadow-sm' 
+                                : 'bg-white border-slate-200 hover:border-brand-300 text-slate-900 shadow-sm';
+
+                        html += `<td id="td_${r}_${c}" class="relative border ${cellBg} tts-cell rounded-lg transition-all duration-200 hover:scale-105" onclick="selectCell(${r}, ${c})">`;
+                        if (numbersAtCell) html += `<span class="absolute top-1 left-1 text-[9px] font-black text-brand-700 bg-brand-100/90 px-1 py-0.5 rounded shadow-sm leading-none pointer-events-none z-10">${numbersAtCell.join(',')}</span>`;
+                        html += `<input type="text" maxlength="1" id="cell_${r}_${c}" value="${val}" oninput="handleCellInput(event, ${r}, ${c})" onkeydown="handleCellKeydown(event, ${r}, ${c})" class="w-full h-full pt-2 text-center uppercase bg-transparent font-black focus:outline-none focus:bg-amber-50 rounded-lg text-brand-900">`;
+                        html += `</td>`;
+                    } else {
+                        html += `<td class="tts-cell bg-brand-900/10 border border-brand-900/10 rounded-md"></td>`;
+                    }
+                }
+                html += '</tr>';
+            }
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        function renderClues() {
+            const mendatarEl = document.getElementById('cluesMendatar');
+            const menurunEl = document.getElementById('cluesMenurun');
+            if (!mendatarEl || !menurunEl || !State.activeGame) return;
+            const { words } = State.activeGame;
+
+            let mendatarHtml = '';
+            let menurunHtml = '';
+
+            words.forEach(w => {
+                let formed = '';
+                w.coords.forEach(coord => formed += (State.answersState[`${coord.r}_${coord.c}`] || ''));
+                let isComplete = formed === w.word;
+                let letterCount = w.word.length;
+
+                let text = `<div id="clue_${w.number}" class="p-3 rounded-2xl transition border ${isComplete ? 'bg-amber-50/80 border-amber-300 text-amber-900 font-bold shadow-sm' : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-brand-50 hover:border-brand-200 cursor-pointer shadow-sm'}" onclick="focusWord(${w.number})">
+                    <div class="flex items-center justify-between">
+                        <span class="font-black text-brand-700">${w.number}. <span class="text-[11px] font-semibold text-slate-500">(${letterCount} huruf)</span></span>
+                        ${isComplete ? '<span class="text-[10px] bg-amber-200 text-amber-800 px-2 py-0.5 rounded-full font-bold shadow-xs">✓ Benar</span>' : ''}
+                    </div>
+                    <p class="mt-1 leading-relaxed">${w.pertanyaan}</p>
+                </div>`;
+                if (w.direction === 'mendatar') mendatarHtml += text;
+                else menurunHtml += text;
+            });
+
+            mendatarEl.innerHTML = mendatarHtml || '<p class="text-slate-400 italic">Tidak ada soal mendatar.</p>';
+            menurunEl.innerHTML = menurunHtml || '<p class="text-slate-400 italic">Tidak ada soal menurun.</p>';
+        }
+
+        function updateGameUI() {
+            if (!State.activeGame) return;
+            const { gridRows, gridCols, words } = State.activeGame;
+
+            let correctCells = new Set();
+            words.forEach(w => {
+                let formed = '';
+                w.coords.forEach(coord => formed += (State.answersState[`${coord.r}_${coord.c}`] || ''));
+                let isComplete = formed === w.word;
+                
+                if (isComplete) {
+                    w.coords.forEach(coord => correctCells.add(`${coord.r}_${coord.c}`));
+                }
+
+                let clueEl = document.getElementById(`clue_${w.number}`);
+                if (clueEl) {
+                    clueEl.className = `p-3 rounded-2xl transition border ${isComplete ? 'bg-amber-50/80 border-amber-300 text-amber-900 font-bold shadow-sm' : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-brand-50 hover:border-brand-200 cursor-pointer shadow-sm'}`;
+                    let headerEl = clueEl.querySelector('.flex.items-center.justify-between');
+                    if (headerEl) {
+                        let letterCount = w.word.length;
+                        headerEl.innerHTML = `
+                            <span class="font-black text-brand-700">${w.number}. <span class="text-[11px] font-semibold text-slate-500">(${letterCount} huruf)</span></span>
+                            ${isComplete ? '<span class="text-[10px] bg-amber-200 text-amber-800 px-2 py-0.5 rounded-full font-bold shadow-xs">✓ Benar</span>' : ''}
+                        `;
+                    }
+                }
+            });
+
+            for (let r = 0; r < gridRows; r++) {
+                for (let c = 0; c < gridCols; c++) {
+                    let tdEl = document.getElementById(`td_${r}_${c}`);
+                    let inputEl = document.getElementById(`cell_${r}_${c}`);
+                    if (!tdEl || !inputEl) continue;
+
+                    let key = `${r}_${c}`;
+                    let val = State.answersState[key] || '';
+                    let isCellCorrect = correctCells.has(key);
+
+                    if (inputEl.value !== val) inputEl.value = val;
+
+                    let cellBg = isCellCorrect 
+                        ? 'bg-gradient-to-br from-amber-100 to-amber-200 border-amber-500 text-amber-900 shadow-md animate-correct' 
+                        : val !== '' 
+                            ? 'bg-brand-50 border-brand-400 text-brand-900 shadow-sm' 
+                            : 'bg-white border-slate-200 hover:border-brand-300 text-slate-900 shadow-sm';
+
+                    tdEl.className = `relative border ${cellBg} tts-cell rounded-lg transition-all duration-200 hover:scale-105`;
+                }
+            }
+        }
+
+        function selectCell(r, c) {
+            let el = document.getElementById(`cell_${r}_${c}`);
+            if (el) el.focus({ preventScroll: true });
+        }
+
+        function handleCellKeydown(e, r, c) {
+            if (e.key === 'Backspace') {
+                let key = `${r}_${c}`;
+                if (!State.answersState[key] && c - 1 >= 0 && State.activeGame.grid[r][c-1] !== '') selectCell(r, c - 1);
+            } else if (e.key === 'ArrowRight' && c + 1 < State.activeGame.gridCols && State.activeGame.grid[r][c+1] !== '') selectCell(r, c + 1);
+            else if (e.key === 'ArrowLeft' && c - 1 >= 0 && State.activeGame.grid[r][c-1] !== '') selectCell(r, c - 1);
+            else if (e.key === 'ArrowDown' && r + 1 < State.activeGame.gridRows && State.activeGame.grid[r+1][c] !== '') selectCell(r + 1, c);
+            else if (e.key === 'ArrowUp' && r - 1 >= 0 && State.activeGame.grid[r-1][c] !== '') selectCell(r - 1, c);
+        }
+
+        function handleCellInput(e, r, c) {
+            let val = e.target.value.toUpperCase().replace(/[^A-Z]/g, '');
+            e.target.value = val;
+            let key = `${r}_${c}`;
+            let prevVal = State.answersState[key];
+            State.answersState[key] = val;
+
+            if (val && !prevVal) {
+                e.target.classList.add('animate-pop');
+                setTimeout(() => e.target.classList.remove('animate-pop'), 300);
+            }
+
+            let correctCount = 0;
+            State.activeGame.words.forEach(w => {
+                let formed = '';
+                w.coords.forEach(coord => formed += (State.answersState[`${coord.r}_${coord.c}`] || ''));
+                if (formed === w.word) correctCount++;
+            });
+
+            State.score = correctCount * 100 - (State.hintsUsed * 25);
+            if (State.score < 0) State.score = 0;
+            const scoreEl = document.getElementById('scoreDisplay');
+            if (scoreEl) {
+                scoreEl.innerText = State.score;
+                scoreEl.classList.add('scale-125', 'text-amber-500');
+                setTimeout(() => scoreEl.classList.remove('scale-125', 'text-amber-500'), 250);
+            }
+
+            updateGameUI();
+
+            if (val && c + 1 < State.activeGame.gridCols && State.activeGame.grid[r][c+1] !== '') selectCell(r, c + 1);
+        }
+
+        function focusWord(num) {
+            let wordObj = State.activeGame.words.find(w => w.number === num);
+            if (wordObj && wordObj.coords.length > 0) selectCell(wordObj.coords[0].r, wordObj.coords[0].c);
+        }
+
+        function useHint() {
+            if (State.hintsUsed >= 3) {
+                alertBox("Batas Bantuan", "Kamu sudah menggunakan semua bantuan (hint)!");
+                return;
+            }
+            let unassignedWords = State.activeGame.words.filter(w => {
+                let formed = '';
+                w.coords.forEach(coord => formed += (State.answersState[`${coord.r}_${coord.c}`] || ''));
+                return formed !== w.word;
+            });
+
+            if (unassignedWords.length === 0) {
+                alertBox("Selesai", "Semua kata sudah terisi dengan benar!");
+                return;
+            }
+
+            let targetWord = unassignedWords[0];
+            let firstCoord = targetWord.coords[0];
+            State.answersState[`${firstCoord.r}_${firstCoord.c}`] = targetWord.word[0];
+            State.hintsUsed++;
+            document.getElementById('hintCount').innerText = 3 - State.hintsUsed;
+            
+            updateGameUI();
+            
+            alertBox("💡 Bantuan Tokoh/Peristiwa", `Huruf pertama untuk pertanyaan nomor ${targetWord.number} adalah "${targetWord.word[0]}". (Nilai dikurangi 25 Poin)`);
+        }
+
+        function startTimer() {
+            if (State.timerInterval) clearInterval(State.timerInterval);
+            State.timerInterval = setInterval(() => {
+                State.remainingSeconds--;
+                let m = Math.floor(State.remainingSeconds / 60);
+                let s = State.remainingSeconds % 60;
+                let display = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+                let timerEl = document.getElementById('timerDisplay');
+                if (timerEl) timerEl.innerText = display;
+
+                if (State.remainingSeconds <= 0) {
+                    clearInterval(State.timerInterval);
+                    alertBox("Waktu Habis!", "Waktu kuis telah habis. Mari lihat hasil pencapaianmu.");
+                    finishGame();
+                }
+            }, 1000);
+        }
+
+        function confirmBox(title, message, onConfirmCallback) {
+            let modal = document.createElement('div');
+            modal.className = "fixed inset-0 bg-brand-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-pop";
+            modal.innerHTML = `
+                <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-sm w-full space-y-4 text-center border border-brand-100">
+                    <div class="w-16 h-16 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center mx-auto text-2xl shadow-inner">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-brand-900">${title}</h3>
+                    <p class="text-sm text-slate-600">${message}</p>
+                    <div class="flex gap-3 pt-4">
+                        <button id="btnCancelBox" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition shadow border">Batal</button>
+                        <button id="btnConfirmBox" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl transition shadow">Ya, Yakin</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            document.getElementById('btnCancelBox').onclick = () => modal.remove();
+            document.getElementById('btnConfirmBox').onclick = () => { modal.remove(); onConfirmCallback(); };
+        }
+
+        function finishGameConfirm() {
+            let belumTerjawab = 0;
+            State.activeGame.words.forEach(w => {
+                let wordFormed = '';
+                w.coords.forEach(coord => wordFormed += (State.answersState[`${coord.r}_${coord.c}`] || ''));
+                if (wordFormed !== w.word) belumTerjawab++;
+            });
+
+            let title = "Akhiri Ujian?";
+            let msg = "Apakah kamu yakin ingin mengakhiri sesi ini dan melihat hasil nilai sejarahmu?";
+            if (belumTerjawab > 0) {
+                let m = Math.floor(State.remainingSeconds / 60);
+                let s = State.remainingSeconds % 60;
+                let waktuSisa = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+                msg = `Masih ada <strong class="text-rose-600">${belumTerjawab} soal</strong> yang kosong atau keliru. Sisa waktu: <strong>${waktuSisa}</strong>.<br><br>Akhiri sekarang?`;
+            }
+            confirmBox(title, msg, finishGame);
+        }
+
+        async function finishGame() {
+            if (State.timerInterval) clearInterval(State.timerInterval);
+            State.endTime = new Date();
+
+            let correct = 0, wrong = 0, details = [];
+            State.activeGame.words.forEach(w => {
+                let wordFormed = '';
+                w.coords.forEach(coord => wordFormed += (State.answersState[`${coord.r}_${coord.c}`] || ''));
+                let isCorrect = wordFormed === w.word;
+                if (isCorrect) correct++; else wrong++;
+                details.push({ question: w.pertanyaan, answer: w.word, explanation: w.penjelasan, userAnswer: wordFormed, isCorrect });
+            });
+
+            let totalWords = State.activeGame.words.length;
+            let accuracy = Math.round((correct / totalWords) * 100);
+            let finalScore = (correct * 100) - (State.hintsUsed * 25);
+            if (finalScore < 0) finalScore = 0;
+
+            let badge = "🥉 PELAJAR SEJARAH";
+            if (finalScore >= 1200) badge = "🏆 SEJARAWAN MUSLIM";
+            else if (finalScore >= 950) badge = "🥇 PENGAMAT SEJARAH";
+            else if (finalScore >= 700) badge = "🥈 PENJELAJAH WAKTU";
+
+            let resultRecord = {
+                id: 'RES-' + Math.random().toString(36).substr(2, 6).toUpperCase(),
+                name: State.gameConfig.studentName || 'Siswa Mandiri',
+                class: State.gameConfig.studentClass || 'VII-A',
+                score: finalScore,
+                correct: correct,
+                wrong: wrong,
+                total: totalWords,
+                accuracy: accuracy,
+                badge: badge,
+                timeSpent: Math.floor((State.endTime - State.startTime) / 1000),
+                date: new Date().toLocaleDateString('id-ID'),
+                details: details
+            };
+
+            await syncSave('results', resultRecord.id, resultRecord);
+            State.lastResult = resultRecord;
+            router.navigate('result');
+        }
+
+        function renderResultView() {
+            const res = State.lastResult || { name: "Siswa", class: "VII-A", score: 950, correct: 5, wrong: 0, total: 5, accuracy: 100, badge: "🏆 SEJARAWAN MUSLIM", timeSpent: 200, details: [] };
+
+            return `
+                <div class="max-w-3xl mx-auto space-y-8 py-4 w-full">
+                    <div class="bg-white p-8 rounded-3xl shadow-lg border border-brand-100 text-center space-y-6">
+                        <div class="w-20 h-20 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center mx-auto text-4xl shadow-inner animate-pop">
+                            <i class="fa-solid fa-award"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-3xl font-black text-brand-900">EVALUASI SELESAI!</h2>
+                            <p class="text-sm text-slate-500 mt-1">Nilai ujian Sejarah Kebudayaan Islam kamu telah disimpan ke Cloud.</p>
+                        </div>
+
+                        <div class="inline-block bg-brand-900 text-white px-8 py-4 rounded-2xl shadow-md border border-brand-700">
+                            <div class="text-xs uppercase font-bold tracking-widest text-brand-300">Gelar Pencapaian</div>
+                            <div class="text-xl font-black text-amber-400 mt-1">${res.badge}</div>
+                        </div>
+
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-left">
+                            <div class="bg-brand-50 p-4 rounded-2xl border border-brand-100">
+                                <div class="text-xs font-semibold text-brand-700">Nama Lengkap</div>
+                                <div class="text-sm font-bold text-brand-900 truncate">${res.name}</div>
+                            </div>
+                            <div class="bg-brand-50 p-4 rounded-2xl border border-brand-100">
+                                <div class="text-xs font-semibold text-brand-700">Kelas</div>
+                                <div class="text-sm font-bold text-brand-900">${res.class}</div>
+                            </div>
+                            <div class="bg-brand-50 p-4 rounded-2xl border border-brand-100">
+                                <div class="text-xs font-semibold text-brand-700">Skor SKI</div>
+                                <div class="text-lg font-black text-amber-600">${res.score}</div>
+                            </div>
+                            <div class="bg-brand-50 p-4 rounded-2xl border border-brand-100">
+                                <div class="text-xs font-semibold text-brand-700">Akurasi</div>
+                                <div class="text-lg font-black text-emerald-600">${res.accuracy}%</div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap justify-center gap-3 pt-4">
+                            <button onclick="router.navigate('leaderboard')" class="px-6 py-3 bg-amber-500 hover:bg-amber-600 text-brand-900 font-bold rounded-xl shadow transition">
+                                <i class="fa-solid fa-award mr-1"></i> Peringkat
+                            </button>
+                            <button onclick="router.navigate('setup')" class="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow transition">
+                                <i class="fa-solid fa-rotate-right mr-1"></i> Ulangi Latihan
+                            </button>
+                            <button onclick="router.navigate('home')" class="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition border border-slate-200">
+                                <i class="fa-solid fa-house mr-1"></i> Menu Utama
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-3xl shadow-sm border border-brand-100 space-y-6">
+                        <h3 class="font-extrabold text-brand-900 text-xl flex items-center gap-2 border-b border-brand-50 pb-3">
+                            <i class="fa-solid fa-book-open-reader text-brand-600"></i> Pembahasan Peristiwa Sejarah
+                        </h3>
+                        <div class="space-y-4">
+                            ${res.details.map((d, idx) => `
+                                <div class="p-4 rounded-2xl border ${d.isCorrect ? 'bg-emerald-50/50 border-emerald-200' : 'bg-rose-50/50 border-rose-200'} space-y-2">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-xs font-bold px-2.5 py-1 rounded-full ${d.isCorrect ? 'bg-emerald-200 text-emerald-800' : 'bg-rose-200 text-rose-800'}">
+                                            ${d.isCorrect ? '✓ TEPAT' : '✗ KELIRU'}
+                                        </span>
+                                        <span class="text-xs font-mono text-slate-500">Kunci: <strong class="text-brand-700">${d.answer}</strong></span>
+                                    </div>
+                                    <p class="text-sm font-semibold text-slate-900">${idx+1}. ${d.question}</p>
+                                    <p class="text-xs text-slate-700 bg-white p-3 rounded-xl border border-slate-200">
+                                        💡 <strong>Fakta Sejarah:</strong> ${d.explanation}
+                                    </p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderTeacherLoginView() {
+            return `
+                <div class="max-w-md mx-auto bg-white p-8 rounded-3xl shadow-sm border border-brand-100 space-y-6 my-auto w-full">
+                    <div class="text-center space-y-2">
+                        <div class="w-16 h-16 rounded-2xl bg-brand-100 text-brand-600 flex items-center justify-center mx-auto text-2xl shadow-inner">
+                            <i class="fa-solid fa-user-tie"></i>
+                        </div>
+                        <h2 class="text-2xl font-black text-brand-900">PORTAL GURU SKI</h2>
+                        <p class="text-xs text-slate-500">Silakan masuk menggunakan akun pengajar Sejarah.</p>
+                    </div>
+
+                    <form onsubmit="handleTeacherLogin(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-brand-800 mb-1">Username</label>
+                            <input type="text" id="loginUsername" required class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none" placeholder="Masukkan username">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-brand-800 mb-1">Password</label>
+                            <input type="password" id="loginPassword" required class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none" placeholder="Masukkan password">
+                        </div>
+                        <button type="submit" class="w-full py-3.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg transition">MASUK</button>
+                    </form>
+                </div>
+            `;
+        }
+
+        function handleTeacherLogin(e) {
+            e.preventDefault();
+            let u = document.getElementById('loginUsername').value.trim();
+            let p = document.getElementById('loginPassword').value.trim();
+            let users = getActiveUsers();
+            let found = users.find(item => item.username === u && item.password === p);
+
+            if (found) {
+                State.currentUser = found;
+                State.activeAdminTab = 'soal';
+                router.navigate('teacherDashboard');
+            } else {
+                alertBox("Login Gagal", "Username atau password keliru.");
+            }
+        }
+
+        function renderTeacherDashboardView() {
+            const results = getActiveResults();
+            const questions = getActiveQuestions();
+            const users = getActiveUsers();
+            const gameTokens = getActiveTokens();
+            const isAdmin = State.currentUser && State.currentUser.role === 'admin';
+            const activeTab = State.activeAdminTab || 'soal';
+
+            let qFilterGrade = document.getElementById('adminQuestionFilter')?.value || 'ALL';
+            let filteredQuestions = qFilterGrade === 'ALL' ? questions : questions.filter(q => Number(q.kelas) === Number(qFilterGrade));
+            let totalQuestions = filteredQuestions.length;
+            let rowsPerPage = State.adminRowsPerPage || 10;
+            let totalPages = Math.ceil(totalQuestions / rowsPerPage) || 1;
+            if (State.adminQuestionPage > totalPages) State.adminQuestionPage = totalPages;
+            if (State.adminQuestionPage < 1) State.adminQuestionPage = 1;
+            let startIndex = (State.adminQuestionPage - 1) * rowsPerPage;
+            let paginatedQuestions = filteredQuestions.slice(startIndex, startIndex + rowsPerPage);
+
+            let resFilterClass = document.getElementById('adminResultClassFilter')?.value || 'ALL';
+            let filteredResults = results;
+            if (resFilterClass === '7') filteredResults = results.filter(r => r.class && r.class.startsWith('VII-'));
+            else if (resFilterClass === '8') filteredResults = results.filter(r => r.class && r.class.startsWith('VIII-'));
+            else if (resFilterClass === '9') filteredResults = results.filter(r => r.class && r.class.startsWith('IX-'));
+            else if (resFilterClass !== 'ALL') filteredResults = results.filter(r => r.class === resFilterClass);
+
+            return `
+                <div class="space-y-8 pb-12 w-full">
+                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-brand-100 flex flex-col md:flex-row items-center justify-between gap-4">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-14 h-14 rounded-2xl bg-brand-600 text-white flex items-center justify-center font-bold text-2xl shadow-md">
+                                <i class="fa-solid fa-user-tie"></i>
+                            </div>
+                            <div>
+                                <h2 class="font-black text-brand-900 text-xl">${isAdmin ? 'RUANG ADMIN MADRASAH' : 'RUANG GURU SKI'}</h2>
+                                <p class="text-xs text-slate-500">Selamat datang, <span class="font-bold text-brand-600">${State.currentUser ? State.currentUser.name : 'Guru SKI'}</span></p>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            ${State.firebaseLoaded ? '<span class="px-3 py-2 text-xs font-bold bg-emerald-100 text-emerald-800 rounded-xl flex items-center"><i class="fa-solid fa-cloud-check mr-1.5"></i> Terhubung Cloud</span>' : '<span class="px-3 py-2 text-xs font-bold bg-amber-100 text-amber-800 rounded-xl flex items-center animate-pulse"><i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Menyelaraskan Firebase...</span>'}
+                            <button onclick="router.navigate('home')" class="px-4 py-2.5 bg-slate-100 hover:bg-rose-50 text-slate-700 hover:text-rose-600 font-bold rounded-xl text-xs transition flex items-center gap-1.5 border">
+                                <i class="fa-solid fa-right-from-bracket"></i> Keluar
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap border-b border-brand-100 gap-6 text-sm font-bold">
+                        <button onclick="switchAdminTab('soal')" id="tabBtnSoal" class="pb-3 border-b-2 ${activeTab === 'soal' ? 'border-brand-600 text-brand-600' : 'border-transparent text-slate-400 hover:text-brand-700'} transition flex items-center gap-2">
+                            <i class="fa-solid fa-book-open-reader"></i> Bank Soal (<span id="soalCountBadge">${questions.length}</span>)
+                        </button>
+                        <button onclick="switchAdminTab('tokens')" id="tabBtnTokens" class="pb-3 border-b-2 ${activeTab === 'tokens' ? 'border-brand-600 text-brand-600' : 'border-transparent text-slate-400 hover:text-brand-700'} transition flex items-center gap-2">
+                            <i class="fa-solid fa-ticket"></i> Token Ujian (<span id="tokenCountBadge">${gameTokens.length}</span>)
+                        </button>
+                        ${isAdmin ? `
+                            <button onclick="switchAdminTab('classes')" id="tabBtnClasses" class="pb-3 border-b-2 ${activeTab === 'classes' ? 'border-brand-600 text-brand-600' : 'border-transparent text-slate-400 hover:text-brand-700'} transition flex items-center gap-2">
+                                <i class="fa-solid fa-users-rectangle"></i> Rombel Kelas
+                            </button>
+                            <button onclick="switchAdminTab('hasil')" id="tabBtnHasil" class="pb-3 border-b-2 ${activeTab === 'hasil' ? 'border-brand-600 text-brand-600' : 'border-transparent text-slate-400 hover:text-brand-700'} transition flex items-center gap-2">
+                                <i class="fa-solid fa-chart-bar"></i> Nilai Siswa
+                            </button>
+                            <button onclick="switchAdminTab('guru')" id="tabBtnGuru" class="pb-3 border-b-2 ${activeTab === 'guru' ? 'border-brand-600 text-brand-600' : 'border-transparent text-slate-400 hover:text-brand-700'} transition flex items-center gap-2">
+                                <i class="fa-solid fa-users-gear"></i> Kelola Akun
+                            </button>
+                        ` : ''}
+                    </div>
+
+                    <!-- TAB SOAL -->
+                    <div id="adminTabSoal" class="space-y-6 ${activeTab === 'soal' ? '' : 'hidden'}">
+                        <div class="bg-white p-6 rounded-3xl shadow-sm border border-brand-100 space-y-4">
+                            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                                <div class="flex flex-wrap items-center gap-3">
+                                    <div>
+                                        <h3 class="font-extrabold text-brand-900 text-lg">Kelola Bank Soal SKI</h3>
+                                        <p class="text-xs text-slate-500">Terdapat <strong class="text-brand-600">${totalQuestions}</strong> soal aktif pada filter saat ini.</p>
+                                    </div>
+                                </div>
+                                <div class="flex flex-wrap gap-2 items-center">
+                                    <select id="adminQuestionFilter" onchange="filterAdminQuestions(this.value)" class="px-3 py-2 bg-brand-50 hover:bg-brand-100 text-brand-800 font-bold rounded-xl text-xs border border-brand-200">
+                                        <option value="ALL" ${qFilterGrade === 'ALL' ? 'selected' : ''}>Semua Kelas MTs</option>
+                                        <option value="7" ${qFilterGrade === '7' ? 'selected' : ''}>Kelas 7</option>
+                                        <option value="8" ${qFilterGrade === '8' ? 'selected' : ''}>Kelas 8</option>
+                                        <option value="9" ${qFilterGrade === '9' ? 'selected' : ''}>Kelas 9</option>
+                                    </select>
+                                    ${isAdmin ? `
+                                        <select id="deleteQuestionClassSelect" class="px-3 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold rounded-xl text-xs border border-rose-200">
+                                            <option value="">-- Hapus Per Kelas --</option>
+                                            <option value="7">Kelas 7</option>
+                                            <option value="8">Kelas 8</option>
+                                            <option value="9">Kelas 9</option>
+                                        </select>
+                                        <button onclick="deleteQuestionsByGrade()" class="px-3.5 py-2 bg-rose-100 hover:bg-rose-200 text-rose-700 font-bold rounded-xl text-xs transition border border-rose-200">
+                                            <i class="fa-solid fa-trash-can mr-1"></i> Kosongkan
+                                        </button>
+                                        <button onclick="openResetDatabaseModal()" class="px-3.5 py-2 bg-amber-100 hover:bg-amber-200 text-amber-800 font-bold rounded-xl text-xs transition border border-amber-200">
+                                            <i class="fa-solid fa-rotate-left mr-1"></i> Reset Default
+                                        </button>
+                                    ` : ''}
+                                    <button onclick="openQuestionModal()" class="px-5 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-xs transition flex items-center gap-2 shadow-sm">
+                                        <i class="fa-solid fa-plus"></i> Buat Soal
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="overflow-x-auto pt-2">
+                                <table class="w-full text-left text-xs text-slate-700">
+                                    <thead class="bg-brand-50 text-brand-800 uppercase font-bold border-b border-brand-100">
+                                        <tr>
+                                            <th class="p-3.5 w-16 text-center">No</th>
+                                            <th class="p-3.5">ID / Kelas</th>
+                                            <th class="p-3.5">Bab Sejarah</th>
+                                            <th class="p-3.5">Soal / Pertanyaan</th>
+                                            <th class="p-3.5 text-center">Tingkat</th>
+                                            <th class="p-3.5 text-center">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="adminQuestionTableBody" class="divide-y divide-brand-50 font-medium">
+                                        ${renderAdminQuestionRows(paginatedQuestions, startIndex)}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="flex flex-col sm:flex-row items-center justify-between pt-4 border-t border-brand-50 gap-4 text-xs font-semibold text-slate-600">
+                                <div class="flex items-center gap-2">
+                                    <span>Tampilkan</span>
+                                    <select id="adminRowsPerPageSelect" onchange="changeAdminRowsPerPage(this.value)" class="px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl font-bold">
+                                        <option value="10" ${rowsPerPage == 10 ? 'selected' : ''}>10</option>
+                                        <option value="20" ${rowsPerPage == 20 ? 'selected' : ''}>20</option>
+                                        <option value="30" ${rowsPerPage == 30 ? 'selected' : ''}>30</option>
+                                    </select>
+                                    <span>soal</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="changeAdminPage(${State.adminQuestionPage - 1})" ${State.adminQuestionPage <= 1 ? 'disabled class="opacity-40 cursor-not-allowed px-3 py-1.5 bg-slate-100 rounded-lg border"' : 'class="px-3 py-1.5 bg-white border border-slate-200 hover:bg-slate-100 rounded-lg font-bold transition"'}>
+                                        <i class="fa-solid fa-chevron-left"></i> Sebelumnya
+                                    </button>
+                                    <span class="px-3 py-1 font-bold text-brand-700">Hal. ${State.adminQuestionPage} dari ${totalPages}</span>
+                                    <button onclick="changeAdminPage(${State.adminQuestionPage + 1})" ${State.adminQuestionPage >= totalPages ? 'disabled class="opacity-40 cursor-not-allowed px-3 py-1.5 bg-slate-100 rounded-lg border"' : 'class="px-3 py-1.5 bg-white border border-slate-200 hover:bg-slate-100 rounded-lg font-bold transition"'}>
+                                        Berikutnya <i class="fa-solid fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB TOKENS -->
+                    <div id="adminTabTokens" class="space-y-6 ${activeTab === 'tokens' ? '' : 'hidden'}">
+                        <div class="bg-white p-6 rounded-3xl shadow-sm border border-brand-100 space-y-4">
+                            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                                <div>
+                                    <h3 class="font-extrabold text-brand-900 text-lg">Kelola Token Ujian SKI</h3>
+                                    <p class="text-xs text-slate-500">Buat token khusus dengan materi sejarah spesifik (misal: Wali Songo).</p>
+                                </div>
+                                <button onclick="openTokenModal()" class="px-5 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-xs transition flex items-center gap-2 shadow-sm">
+                                    <i class="fa-solid fa-plus"></i> Generate Token Baru
+                                </button>
+                            </div>
+                            <div class="overflow-x-auto pt-2">
+                                <table class="w-full text-left text-xs text-slate-700">
+                                    <thead class="bg-brand-50 text-brand-800 uppercase font-bold border-b border-brand-100">
+                                        <tr>
+                                            <th class="p-3.5">Kode Token</th>
+                                            <th class="p-3.5">Judul Evaluasi</th>
+                                            <th class="p-3.5">Kelas</th>
+                                            <th class="p-3.5">Materi Kurikulum</th>
+                                            <th class="p-3.5 text-center">Soal</th>
+                                            <th class="p-3.5 text-center">Waktu</th>
+                                            <th class="p-3.5 text-center">Opsi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-brand-50 font-medium">
+                                        ${gameTokens.map((t) => `
+                                            <tr class="hover:bg-brand-50/50 transition">
+                                                <td class="p-3.5 font-mono font-black text-brand-600 text-sm">${t.token}</td>
+                                                <td class="p-3.5 font-bold text-slate-900">${t.title}</td>
+                                                <td class="p-3.5"><span class="px-2 py-0.5 rounded bg-brand-100 text-brand-800 font-bold border border-brand-200">Kelas ${t.kelas}</span></td>
+                                                <td class="p-3.5 font-semibold text-slate-600">${t.materi || 'Semua Materi'}</td>
+                                                <td class="p-3.5 text-center font-bold">${t.soalCount}</td>
+                                                <td class="p-3.5 text-center"><span class="px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 font-bold border border-amber-200"><i class="fa-solid fa-clock mr-1"></i> ${t.timer}m</span></td>
+                                                <td class="p-3.5 text-center space-x-1">
+                                                    <button onclick="previewTokenQuestions('${t.token}')" class="p-2 bg-slate-100 hover:bg-amber-100 text-slate-700 hover:text-amber-700 rounded-lg transition" title="Lihat Soal"><i class="fa-solid fa-eye"></i></button>
+                                                    <button onclick="deleteGameToken('${t.token}')" class="p-2 bg-slate-100 hover:bg-rose-100 text-slate-700 hover:text-rose-600 rounded-lg transition" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+                                                </td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB KELAS -->
+                    ${isAdmin ? `
+                        <div id="adminTabClasses" class="space-y-6 ${activeTab === 'classes' ? '' : 'hidden'}">
+                            <div class="bg-white p-6 rounded-3xl shadow-sm border border-brand-100 space-y-4">
+                                <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                                    <div>
+                                        <h3 class="font-extrabold text-brand-900 text-lg">Daftar Rombel Kelas Madrasah</h3>
+                                        <p class="text-xs text-slate-500">Sesuaikan daftar kelas yang dapat dipilih oleh siswa saat mulai ujian.</p>
+                                    </div>
+                                    <button onclick="openAddClassModal()" class="px-5 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-xs transition flex items-center gap-2 shadow-sm">
+                                        <i class="fa-solid fa-plus"></i> Tambah Rombel Baru
+                                    </button>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+                                    <div class="bg-brand-50 p-5 rounded-2xl border border-brand-100 space-y-3">
+                                        <h4 class="font-bold text-brand-900 flex items-center gap-2"><i class="fa-solid fa-users-rectangle text-brand-600"></i> Kelas 7</h4>
+                                        <div class="flex flex-wrap gap-2">
+                                            ${State.availableClasses[7].map(c => `
+                                                <span class="px-3 py-1.5 bg-white border border-brand-200 rounded-xl font-bold text-xs text-brand-800 shadow-sm flex items-center gap-2">
+                                                    ${c}
+                                                    <button onclick="removeClassItem(7, '${c}')" class="text-rose-500 hover:text-rose-700"><i class="fa-solid fa-xmark"></i></button>
+                                                </span>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                    <div class="bg-brand-50 p-5 rounded-2xl border border-brand-100 space-y-3">
+                                        <h4 class="font-bold text-brand-900 flex items-center gap-2"><i class="fa-solid fa-users-rectangle text-emerald-600"></i> Kelas 8</h4>
+                                        <div class="flex flex-wrap gap-2">
+                                            ${State.availableClasses[8].map(c => `
+                                                <span class="px-3 py-1.5 bg-white border border-brand-200 rounded-xl font-bold text-xs text-brand-800 shadow-sm flex items-center gap-2">
+                                                    ${c}
+                                                    <button onclick="removeClassItem(8, '${c}')" class="text-rose-500 hover:text-rose-700"><i class="fa-solid fa-xmark"></i></button>
+                                                </span>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                    <div class="bg-brand-50 p-5 rounded-2xl border border-brand-100 space-y-3">
+                                        <h4 class="font-bold text-brand-900 flex items-center gap-2"><i class="fa-solid fa-users-rectangle text-amber-600"></i> Kelas 9</h4>
+                                        <div class="flex flex-wrap gap-2">
+                                            ${State.availableClasses[9].map(c => `
+                                                <span class="px-3 py-1.5 bg-white border border-brand-200 rounded-xl font-bold text-xs text-brand-800 shadow-sm flex items-center gap-2">
+                                                    ${c}
+                                                    <button onclick="removeClassItem(9, '${c}')" class="text-rose-500 hover:text-rose-700"><i class="fa-solid fa-xmark"></i></button>
+                                                </span>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TAB HASIL SISWA -->
+                        <div id="adminTabHasil" class="space-y-6 ${activeTab === 'hasil' ? '' : 'hidden'}">
+                            <div class="bg-white p-6 rounded-3xl shadow-sm border border-brand-100 space-y-4">
+                                <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                                    <div>
+                                        <h3 class="font-extrabold text-brand-900 text-lg">Rekap Nilai SKI Siswa</h3>
+                                        <p class="text-xs text-slate-500">Daftar riwayat nilai ujian TTS Sejarah dari semua siswa.</p>
+                                    </div>
+                                    <div class="flex flex-wrap gap-2 items-center">
+                                        <select id="adminResultClassFilter" onchange="filterAdminResults(this.value)" class="px-3 py-2 bg-brand-50 hover:bg-brand-100 text-brand-800 font-bold rounded-xl text-xs border border-brand-200">
+                                            <option value="ALL" ${resFilterClass === 'ALL' ? 'selected' : ''}>Semua Kelas MTs</option>
+                                            <option value="7" ${resFilterClass === '7' ? 'selected' : ''}>Angkatan Kelas 7</option>
+                                            <option value="8" ${resFilterClass === '8' ? 'selected' : ''}>Angkatan Kelas 8</option>
+                                            <option value="9" ${resFilterClass === '9' ? 'selected' : ''}>Angkatan Kelas 9</option>
+                                            <optgroup label="Per Kelas Rombel">
+                                                ${[7,8,9].flatMap(g => State.availableClasses[g] || []).map(c => `<option value="${c}" ${resFilterClass === c ? 'selected' : ''}>Kelas ${c}</option>`).join('')}
+                                            </optgroup>
+                                        </select>
+                                        <button onclick="clearAllResults()" class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs transition shadow-sm border border-rose-700">
+                                            <i class="fa-solid fa-trash-can mr-1"></i> Kosongkan Rekap
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-left text-xs text-slate-700">
+                                        <thead class="bg-brand-50 text-brand-800 uppercase font-bold border-b border-brand-100">
+                                            <tr>
+                                                <th class="p-3">Nama Lengkap</th>
+                                                <th class="p-3">Kelas</th>
+                                                <th class="p-3 text-center">Skor</th>
+                                                <th class="p-3 text-center">Akurasi</th>
+                                                <th class="p-3">Gelar / Predikat</th>
+                                                <th class="p-3">Tanggal Main</th>
+                                                <th class="p-3 text-center">Hapus</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-brand-50">
+                                            ${filteredResults.length ? filteredResults.map((r) => `
+                                                <tr class="hover:bg-brand-50/50 transition">
+                                                    <td class="p-3 font-bold text-slate-900">${r.name}</td>
+                                                    <td class="p-3"><span class="px-2 py-0.5 rounded bg-brand-100 border border-brand-200 font-bold">${r.class}</span></td>
+                                                    <td class="p-3 text-center font-black text-amber-500 text-sm">${r.score}</td>
+                                                    <td class="p-3 text-center font-bold text-emerald-600">${r.accuracy}%</td>
+                                                    <td class="p-3 font-semibold text-brand-700">${r.badge}</td>
+                                                    <td class="p-3 text-slate-400 font-medium">${r.date}</td>
+                                                    <td class="p-3 text-center">
+                                                        <button onclick="deleteResultRecord('${r.id}')" class="p-1.5 bg-rose-50 text-rose-600 rounded hover:bg-rose-100 transition"><i class="fa-solid fa-trash"></i></button>
+                                                    </td>
+                                                </tr>
+                                            `).join('') : '<tr><td colspan="7" class="p-6 text-center text-slate-400 italic">Belum ada riwayat pengerjaan.</td></tr>'}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TAB AKUN GURU -->
+                        <div id="adminTabGuru" class="space-y-6 ${activeTab === 'guru' ? '' : 'hidden'}">
+                            <div class="bg-white p-6 rounded-3xl shadow-sm border border-brand-100 space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h3 class="font-extrabold text-brand-900 text-lg">Kelola Akses Guru</h3>
+                                        <p class="text-xs text-slate-500">Tambah bapak/ibu guru yang berhak mengelola soal dan token.</p>
+                                    </div>
+                                    <button onclick="openUserModal()" class="px-5 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-xs transition flex items-center gap-2 shadow-sm">
+                                        <i class="fa-solid fa-user-plus"></i> Akun Baru
+                                    </button>
+                                </div>
+                                <div class="overflow-x-auto pt-2">
+                                    <table class="w-full text-left text-xs text-slate-700">
+                                        <thead class="bg-brand-50 text-brand-800 uppercase font-bold border-b border-brand-100">
+                                            <tr>
+                                                <th class="p-3">Nama Pengajar & Gelar</th>
+                                                <th class="p-3">Username Login</th>
+                                                <th class="p-3">Hak Akses</th>
+                                                <th class="p-3 text-center">Pengaturan</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-brand-50">
+                                            ${users.map((u) => `
+                                                <tr class="hover:bg-brand-50/30">
+                                                    <td class="p-3 font-bold text-slate-900">${u.name}</td>
+                                                    <td class="p-3 font-mono font-semibold">${u.username}</td>
+                                                    <td class="p-3"><span class="px-2 py-0.5 rounded ${u.role === 'admin' ? 'bg-amber-100 text-amber-800' : 'bg-brand-100 text-brand-800'} font-bold border">${u.role.toUpperCase()}</span></td>
+                                                    <td class="p-3 text-center space-x-2">
+                                                        <button onclick="openChangePasswordModal('${u.username}')" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg transition border">
+                                                            <i class="fa-solid fa-key mr-1"></i> Sandi
+                                                        </button>
+                                                        ${u.username !== 'admin' ? `
+                                                            <button onclick="deleteUser('${u.username}')" class="p-1.5 bg-rose-50 text-rose-600 rounded hover:bg-rose-100 transition"><i class="fa-solid fa-trash"></i></button>
+                                                        ` : ''}
+                                                    </td>
+                                                </tr>
+                                            `).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        window.filterAdminQuestions = function(gradeVal) {
+            State.adminQuestionPage = 1;
+            renderApp();
+        };
+
+        window.filterAdminResults = function(classVal) {
+            renderApp();
+        };
+
+        window.changeAdminPage = function(newPage) {
+            State.adminQuestionPage = newPage;
+            renderApp();
+        };
+
+        window.changeAdminRowsPerPage = function(val) {
+            State.adminRowsPerPage = parseInt(val) || 10;
+            State.adminQuestionPage = 1;
+            renderApp();
+        };
+
+        function renderAdminQuestionRows(questions, startIndex) {
+            if (!questions.length) return `<tr><td colspan="6" class="p-8 text-center text-slate-400 italic">Belum ada bank soal materi SKI.</td></tr>`;
+            const isAdmin = State.currentUser && State.currentUser.role === 'admin';
+            return questions.map((q, idx) => `
+                <tr class="hover:bg-brand-50/50 transition">
+                    <td class="p-3.5 text-center font-bold text-slate-500">${startIndex + idx + 1}</td>
+                    <td class="p-3.5 font-mono text-slate-500 text-[10px]">
+                        <span class="font-bold text-brand-800 text-xs">${q.id || 'SKI-'+idx}</span><br>
+                        MTs Kls ${q.kelas}
+                    </td>
+                    <td class="p-3.5"><span class="px-2 py-0.5 rounded bg-amber-50 border border-amber-200 text-amber-800 font-bold">${q.materi}</span></td>
+                    <td class="p-3.5 text-slate-900 max-w-xs truncate font-medium">${q.pertanyaan}</td>
+                    <td class="p-3.5 text-center">
+                        <span class="px-2 py-1 rounded-full text-[10px] font-bold ${q.kesulitan === 'Mudah' ? 'bg-brand-100 text-brand-800' : q.kesulitan === 'Sedang' ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800'}">
+                            ${q.kesulitan || 'Sedang'}
+                        </span>
+                    </td>
+                    <td class="p-3.5 text-center space-x-1">
+                        <button onclick="editQuestion('${q.id || idx}')" class="p-2 bg-slate-100 hover:bg-amber-100 text-slate-700 hover:text-amber-700 rounded-lg transition" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                        ${isAdmin ? `<button onclick="deleteQuestion('${q.id || idx}')" class="p-2 bg-slate-100 hover:bg-rose-100 text-slate-700 hover:text-rose-600 rounded-lg transition" title="Hapus"><i class="fa-solid fa-trash"></i></button>` : ''}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        window.switchAdminTab = function(tab) {
+            State.activeAdminTab = tab;
+            ['adminTabSoal', 'adminTabTokens', 'adminTabClasses', 'adminTabHasil', 'adminTabGuru'].forEach(id => {
+                document.getElementById(id)?.classList.add('hidden');
+            });
+            ['tabBtnSoal', 'tabBtnTokens', 'tabBtnClasses', 'tabBtnHasil', 'tabBtnGuru'].forEach(id => {
+                let el = document.getElementById(id);
+                if (el) el.className = "pb-3 border-b-2 border-transparent text-slate-400 hover:text-brand-700 transition flex items-center gap-2";
+            });
+
+            if (tab === 'soal') {
+                document.getElementById('adminTabSoal')?.classList.remove('hidden');
+                document.getElementById('tabBtnSoal').className = "pb-3 border-b-2 border-brand-600 text-brand-600 transition flex items-center gap-2";
+            } else if (tab === 'tokens') {
+                document.getElementById('adminTabTokens')?.classList.remove('hidden');
+                document.getElementById('tabBtnTokens').className = "pb-3 border-b-2 border-brand-600 text-brand-600 transition flex items-center gap-2";
+            } else if (tab === 'classes') {
+                document.getElementById('adminTabClasses')?.classList.remove('hidden');
+                document.getElementById('tabBtnClasses').className = "pb-3 border-b-2 border-brand-600 text-brand-600 transition flex items-center gap-2";
+            } else if (tab === 'hasil') {
+                document.getElementById('adminTabHasil')?.classList.remove('hidden');
+                document.getElementById('tabBtnHasil').className = "pb-3 border-b-2 border-brand-600 text-brand-600 transition flex items-center gap-2";
+            } else if (tab === 'guru') {
+                document.getElementById('adminTabGuru')?.classList.remove('hidden');
+                document.getElementById('tabBtnGuru').className = "pb-3 border-b-2 border-brand-600 text-brand-600 transition flex items-center gap-2";
+            }
+        };
+
+        window.openAddClassModal = function() {
+            let modal = document.createElement('div');
+            modal.className = "fixed inset-0 bg-brand-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4";
+            modal.innerHTML = `
+                <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full space-y-6 border border-brand-100">
+                    <h3 class="font-black text-brand-900 text-lg">Tambah Rombel Madrasah</h3>
+                    <form onsubmit="saveNewClass(event)" class="space-y-4 text-xs font-semibold text-slate-600">
+                        <div>
+                            <label class="block mb-1 text-brand-800">Tingkat Kelas</label>
+                            <select id="newClassGrade" class="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 font-bold focus:ring-2 focus:ring-brand-500">
+                                <option value="7">Kelas 7 MTs</option>
+                                <option value="8">Kelas 8 MTs</option>
+                                <option value="9">Kelas 9 MTs</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block mb-1 text-brand-800">Nama Rombel (Misal: VII-E)</label>
+                            <input type="text" id="newClassName" required placeholder="VII-E" class="w-full p-2.5 rounded-xl border border-slate-200 uppercase font-bold focus:ring-2 focus:ring-brand-500">
+                        </div>
+                        <div class="pt-4 flex gap-3 justify-end">
+                            <button type="button" onclick="this.closest('.fixed').remove()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 border text-slate-700 font-bold rounded-xl">Batal</button>
+                            <button type="submit" class="px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow">Simpan</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        };
+
+        window.saveNewClass = function(e) {
+            e.preventDefault();
+            let grade = document.getElementById('newClassGrade').value;
+            let cName = document.getElementById('newClassName').value.trim().toUpperCase();
+            if (!State.availableClasses[grade].includes(cName)) State.availableClasses[grade].push(cName);
+            document.querySelector('.fixed').remove();
+            router.navigate('teacherDashboard');
+            alertBox("Sukses", `Rombel ${cName} berhasil ditambahkan ke sistem.`);
+        };
+
+        window.removeClassItem = function(grade, cName) {
+            confirmBox("Hapus Rombel?", `Yakin ingin menghapus kelas ${cName}?`, () => {
+                State.availableClasses[grade] = State.availableClasses[grade].filter(item => item !== cName);
+                router.navigate('teacherDashboard');
+            });
+        };
+
+        window.openQuestionModal = function(editId = null) {
+            let q = editId ? getActiveQuestions().find(item => item.id === editId) : null;
+            let currentGrade = q ? q.kelas : 7;
+            let mats = GRADE_MATERIALS[currentGrade].filter(m => m !== "Semua Materi") || [];
+
+            let modal = document.createElement('div');
+            modal.className = "fixed inset-0 bg-brand-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto";
+            modal.innerHTML = `
+                <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-lg w-full space-y-6 border border-brand-100 my-8">
+                    <h3 class="font-black text-brand-900 text-lg">${q ? 'Edit Bank Soal SKI' : 'Tambah Soal Sejarah'}</h3>
+                    <form onsubmit="saveQuestionData(event, '${editId || ''}')" class="space-y-4 text-xs font-semibold text-slate-600">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block mb-1 text-brand-800">Kelas</label>
+                                <select id="qKelas" onchange="updateModalMaterials(this.value)" class="w-full p-2.5 rounded-xl border bg-slate-50 font-bold focus:ring-2 focus:ring-brand-500">
+                                    <option value="7" ${q && q.kelas == 7 ? 'selected' : ''}>Kelas 7</option>
+                                    <option value="8" ${q && q.kelas == 8 ? 'selected' : ''}>Kelas 8</option>
+                                    <option value="9" ${q && q.kelas == 9 ? 'selected' : ''}>Kelas 9</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block mb-1 text-brand-800">Tingkat Kesulitan</label>
+                                <select id="qSulit" class="w-full p-2.5 rounded-xl border bg-slate-50 font-bold focus:ring-2 focus:ring-brand-500">
+                                    <option value="Mudah" ${q && q.kesulitan === 'Mudah' ? 'selected' : ''}>Dasar</option>
+                                    <option value="Sedang" ${!q || q.kesulitan === 'Sedang' ? 'selected' : ''}>Menengah</option>
+                                    <option value="Sulit" ${q && q.kesulitan === 'Sulit' ? 'selected' : ''}>Lanjutan</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block mb-1 text-brand-800">Bab Sejarah</label>
+                            <select id="qMateri" class="w-full p-2.5 rounded-xl border bg-slate-50 font-bold text-brand-900 focus:ring-2 focus:ring-brand-500">
+                                ${mats.map(m => `<option value="${m}" ${q && q.materi === m ? 'selected' : ''}>${m}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block mb-1 text-brand-800">Pertanyaan (Petunjuk TTS)</label>
+                            <textarea id="qTanya" required rows="2" class="w-full p-3 rounded-xl border text-sm font-bold focus:ring-2 focus:ring-brand-500" placeholder="Misal: Kerajaan Islam pertama di pulau Jawa">${q ? q.pertanyaan : ''}</textarea>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block mb-1 text-brand-800">Jawaban (Tanpa Spasi)</label>
+                                <input type="text" id="qJawab" required value="${q ? q.jawaban : ''}" placeholder="DEMAK" class="w-full p-2.5 rounded-xl border uppercase font-mono font-bold text-amber-600 focus:ring-2 focus:ring-brand-500">
+                            </div>
+                            <div>
+                                <label class="block mb-1 text-brand-800">Arah Default</label>
+                                <select id="qArah" class="w-full p-2.5 rounded-xl border bg-slate-50 font-bold focus:ring-2 focus:ring-brand-500">
+                                    <option value="mendatar">Mendatar</option>
+                                    <option value="menurun">Menurun</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block mb-1 text-brand-800">Fakta / Penjelasan Guru</label>
+                            <textarea id="qPenjelas" required rows="2" class="w-full p-3 rounded-xl border text-sm focus:ring-2 focus:ring-brand-500" placeholder="Muncul setelah ujian selesai untuk edukasi siswa.">${q ? q.penjelasan : ''}</textarea>
+                        </div>
+                        <div class="pt-4 flex gap-3 justify-end">
+                            <button type="button" onclick="this.closest('.fixed').remove()" class="px-4 py-2.5 bg-slate-100 border hover:bg-slate-200 text-slate-700 font-bold rounded-xl">Batal</button>
+                            <button type="submit" class="px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow">Simpan Soal SKI</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        };
+
+        window.updateModalMaterials = function(grade) {
+            let mats = GRADE_MATERIALS[grade].filter(m => m !== "Semua Materi") || [];
+            let selectEl = document.getElementById('qMateri');
+            if (selectEl) selectEl.innerHTML = mats.map(m => `<option value="${m}">${m}</option>`).join('');
+        };
+
+        window.saveQuestionData = async function(e, editId) {
+            e.preventDefault();
+            let id = editId || ('SKI' + document.getElementById('qKelas').value + '-' + Math.floor(Math.random()*9000+1000));
+            let rawJawaban = document.getElementById('qJawab').value.trim().toUpperCase();
+            let cleanJawaban = rawJawaban.replace(/[^A-Z]/g, '');
+
+            if(cleanJawaban.length < 2) {
+                alertBox("Peringatan", "Jawaban harus berupa huruf minimal 2 karakter, tanpa spasi atau simbol.");
+                return;
+            }
+
+            let data = {
+                id: id,
+                kelas: parseInt(document.getElementById('qKelas').value),
+                bab: 1,
+                materi: document.getElementById('qMateri').value.trim(),
+                pertanyaan: document.getElementById('qTanya').value.trim(),
+                jawaban: cleanJawaban,
+                kesulitan: document.getElementById('qSulit').value,
+                penjelasan: document.getElementById('qPenjelas').value.trim(),
+                arah: document.getElementById('qArah').value
+            };
+            await syncSave('questions', id, data);
+            document.querySelector('.fixed').remove();
+            router.navigate('teacherDashboard');
+            alertBox("Alhamdulillah", "Soal SKI berhasil disimpan ke database.");
+        };
+
+        window.editQuestion = function(id) { openQuestionModal(id); };
+
+        window.deleteQuestion = async function(id) {
+            confirmBox("Hapus Soal?", "Buang soal ini dari bank soal madrasah?", async () => {
+                await syncDelete('questions', id);
+                router.navigate('teacherDashboard');
+            });
+        };
+
+        window.deleteQuestionsByGrade = async function() {
+            let gradeVal = document.getElementById('deleteQuestionClassSelect').value;
+            if (!gradeVal) {
+                alertBox("Perhatian", "Pilih tingkat kelas terlebih dahulu di dropdown.");
+                return;
+            }
+            let questions = getActiveQuestions();
+            let toDelete = questions.filter(q => Number(q.kelas) === Number(gradeVal));
+            confirmBox("Hapus Semua Soal Kelas?", `Yakin ingin mengosongkan ${toDelete.length} soal untuk Kelas ${gradeVal}?`, async () => {
+                for (let q of toDelete) if (q.id) await syncDelete('questions', q.id);
+                router.navigate('teacherDashboard');
+            });
+        };
+
+        window.openResetDatabaseModal = function() {
+            let modal = document.createElement('div');
+            modal.className = "fixed inset-0 bg-brand-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-pop";
+            modal.innerHTML = `
+                <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-sm w-full space-y-4 text-center border border-brand-100">
+                    <div class="w-16 h-16 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center mx-auto text-2xl shadow-inner">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-brand-900">Reset Database Soal?</h3>
+                    <p class="text-xs text-slate-600">Aksi ini akan menghapus soal tambahan dan mengembalikan database ke default sistem SKI.</p>
+                    <input type="password" id="resetDbPassword" placeholder="Masukkan password admin" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-center focus:ring-2 focus:ring-rose-500">
+                    <div class="flex gap-3 pt-2">
+                        <button onclick="this.closest('.fixed').remove()" class="w-full py-2.5 bg-slate-100 border text-slate-700 font-bold rounded-xl">Batal</button>
+                        <button onclick="executeResetDatabase()" class="w-full py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl shadow">Reset Database</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        };
+
+        window.executeResetDatabase = async function() {
+            let pass = document.getElementById('resetDbPassword').value.trim();
+            let users = getActiveUsers();
+            let adminUser = users.find(u => u.username === 'admin');
+            let adminPass = adminUser ? adminUser.password : 'admin123';
+
+            if (pass !== adminPass) {
+                alertBox("Akses Ditolak", "Password administrator tidak valid.");
+                return;
+            }
+            
+            if (window.firebaseDb && window.firebaseHelpers) {
+                let currentQs = getActiveQuestions();
+                for (let q of currentQs) {
+                   if (q.id) {
+                      const docRef = window.firebaseHelpers.doc(window.firebaseDb, `ski_questions`, q.id);
+                      await window.firebaseHelpers.deleteDoc(docRef).catch(e=>console.log(e));
+                   }
+                }
+                
+                for (let eq of EMBEDDED_QUESTIONS) {
+                    const docRef = window.firebaseHelpers.doc(window.firebaseDb, `ski_questions`, eq.id);
+                    await window.firebaseHelpers.setDoc(docRef, eq).catch(e=>console.log(e));
+                }
+            }
+            
+            document.querySelector('.fixed').remove();
+            State.cloudQuestions = EMBEDDED_QUESTIONS;
+            localStorage.setItem('ski_tts_questions_fb', JSON.stringify(EMBEDDED_QUESTIONS));
+            alertBox("Berhasil", "Bank soal SKI telah dikembalikan ke kondisi default.");
+            router.navigate('teacherDashboard');
+        };
+
+        window.openTokenModal = function() {
+            let grade7Mats = GRADE_MATERIALS[7];
+            let modal = document.createElement('div');
+            modal.className = "fixed inset-0 bg-brand-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto";
+            modal.innerHTML = `
+                <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-xl w-full space-y-6 border border-brand-100 my-8 max-h-[90vh] overflow-y-auto">
+                    <h3 class="font-black text-brand-900 text-lg">Terbitkan Token Ujian SKI</h3>
+                    <form onsubmit="saveGameToken(event)" class="space-y-4 text-xs font-semibold text-slate-600">
+                        <div>
+                            <label class="block mb-1 text-brand-800">Judul Penugasan</label>
+                            <input type="text" id="tTitle" required placeholder="Evaluasi Sejarah Wali Songo" class="w-full p-2.5 rounded-xl border focus:ring-2 focus:ring-brand-500">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block mb-1 text-brand-800">Kode Token</label>
+                                <input type="text" id="tCode" required value="SKI${Math.floor(Math.random()*900+100)}U" class="w-full p-2.5 rounded-xl border font-mono uppercase font-bold text-amber-600 focus:ring-2 focus:ring-brand-500">
+                            </div>
+                            <div>
+                                <label class="block mb-1 text-brand-800">Kelas Target</label>
+                                <select id="tKelas" onchange="updateTokenMaterialsAndPreview(this.value)" class="w-full p-2.5 rounded-xl border bg-slate-50 font-bold focus:ring-2 focus:ring-brand-500">
+                                    <option value="7">Kelas 7</option>
+                                    <option value="8">Kelas 8</option>
+                                    <option value="9">Kelas 9</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block mb-1 text-brand-800">Cakupan Materi</label>
+                                <select id="tokenMateriSelect" onchange="updateTokenQuestionPreview()" class="w-full p-3 rounded-xl border bg-slate-50 font-bold text-brand-900 focus:ring-2 focus:ring-brand-500">
+                                    ${grade7Mats.map(m => `<option value="${m}">${m}</option>`).join('')}
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block mb-1 text-brand-800">Plafon Soal</label>
+                                <select id="tSoal" onchange="updateTokenQuestionPreview()" class="w-full p-2.5 rounded-xl border bg-slate-50 font-bold focus:ring-2 focus:ring-brand-500">
+                                    <option value="5">5 Soal</option>
+                                    <option value="10" selected>10 Soal</option>
+                                    <option value="15">15 Soal</option>
+                                    <option value="20">20 Soal</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block mb-1 text-brand-800">Durasi Pengerjaan (Menit)</label>
+                            <input type="number" id="tTimer" min="1" max="120" value="10" required class="w-full p-2.5 rounded-xl border font-bold text-amber-600 focus:ring-2 focus:ring-brand-500">
+                        </div>
+                        <div class="bg-amber-50/50 p-4 rounded-2xl border border-amber-100 space-y-2">
+                            <label class="block font-bold text-amber-900">Intip Contoh Soal (Dipilih Otomatis):</label>
+                            <div id="tokenQuestionPreviewList" class="max-h-32 overflow-y-auto space-y-1.5 text-brand-900 font-medium text-[11px]"></div>
+                        </div>
+                        <div class="pt-4 flex gap-3 justify-end">
+                            <button type="button" onclick="this.closest('.fixed').remove()" class="px-4 py-2.5 bg-slate-100 border text-slate-700 font-bold rounded-xl">Batal</button>
+                            <button type="submit" class="px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow">Terbitkan Token</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            updateTokenQuestionPreview();
+        };
+
+        window.updateTokenMaterialsAndPreview = function(grade) {
+            let mats = GRADE_MATERIALS[grade] || [];
+            let selectEl = document.getElementById('tokenMateriSelect');
+            if (selectEl) selectEl.innerHTML = mats.map(m => `<option value="${m}">${m}</option>`).join('');
+            updateTokenQuestionPreview();
+        };
+
+        window.updateTokenQuestionPreview = function() {
+            let grade = document.getElementById('tKelas')?.value || 7;
+            let materi = document.getElementById('tokenMateriSelect')?.value || 'Semua Materi';
+            let count = parseInt(document.getElementById('tSoal')?.value) || 10;
+            let allQuestions = getActiveQuestions();
+            let filtered = allQuestions.filter(q => Number(q.kelas) === Number(grade));
+            if (materi && materi !== 'Semua Materi') {
+                let subFiltered = filtered.filter(q => q.materi === materi);
+                if (subFiltered.length >= 3) filtered = subFiltered;
+            }
+            
+            let uniquePool = [];
+            let seenAnswers = new Set();
+            let seenQuestions = new Set();
+            for (let q of filtered) {
+                let cleanAns = (q.jawaban || '').replace(/[^A-Z]/g, '').toUpperCase();
+                let cleanQ = (q.pertanyaan || '').trim().toLowerCase();
+                if (cleanAns.length >= 2 && !seenAnswers.has(cleanAns) && !seenQuestions.has(cleanQ)) {
+                    seenAnswers.add(cleanAns);
+                    seenQuestions.add(cleanQ);
+                    uniquePool.push(q);
+                }
+            }
+            uniquePool.sort(() => Math.random() - 0.5);
+            let previewItems = uniquePool.slice(0, count);
+            
+            window._tempTokenQuestions = previewItems.map(q => q.id);
+            
+            let previewListEl = document.getElementById('tokenQuestionPreviewList');
+            if (!previewListEl) return;
+            previewListEl.innerHTML = previewItems.map((q, i) => `
+                <div class="p-2 bg-white rounded-xl border flex items-center justify-between">
+                    <span class="font-bold text-brand-900 truncate pr-2">${i+1}. ${q.pertanyaan}</span>
+                    <span class="font-mono bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-bold">${q.jawaban}</span>
+                </div>
+            `).join('');
+        };
+
+        window.previewTokenQuestions = function(tokenCode) {
+            let tokens = getActiveTokens();
+            let t = tokens.find(item => item.token === tokenCode);
+            if (!t) return;
+            
+            let allQuestions = getActiveQuestions();
+            let previewItems = [];
+            
+            if (t.questionIds && t.questionIds.length > 0) {
+                 previewItems = allQuestions.filter(q => t.questionIds.includes(q.id));
+            } else {
+                let filtered = allQuestions.filter(q => Number(q.kelas) === Number(t.kelas));
+                if (t.materi && t.materi !== 'Semua Materi') {
+                    let subFiltered = filtered.filter(q => q.materi === t.materi);
+                    if (subFiltered.length >= 3) filtered = subFiltered;
+                }
+                previewItems = filtered.slice(0, t.soalCount || 10);
+            }
+            
+            let modal = document.createElement('div');
+            modal.className = "fixed inset-0 bg-brand-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4";
+            modal.innerHTML = `
+                <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-lg w-full space-y-4 border border-brand-100 max-h-[80vh] overflow-y-auto">
+                    <div class="flex items-center justify-between border-b border-brand-50 pb-3">
+                        <h3 class="font-black text-brand-900 text-base">Detail Token SKI: <span class="text-amber-500">${t.token}</span></h3>
+                        <button onclick="this.closest('.fixed').remove()" class="text-slate-400 hover:text-slate-700 font-bold"><i class="fa-solid fa-xmark text-lg"></i></button>
+                    </div>
+                    <div class="space-y-2 pt-2">
+                        ${previewItems.map((q, idx) => `
+                            <div class="p-3 bg-brand-50 rounded-2xl border border-brand-100 text-xs space-y-1">
+                                <div class="flex justify-between font-bold text-brand-700">
+                                    <span>No. ${idx+1} (${q.materi})</span>
+                                    <span class="font-mono text-amber-700 bg-amber-100 px-2 py-0.5 rounded">${q.jawaban}</span>
+                                </div>
+                                <p class="text-brand-900 font-semibold">${q.pertanyaan}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="pt-2 text-right">
+                        <button onclick="this.closest('.fixed').remove()" class="px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-xs">Tutup Pratinjau</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        };
+
+        window.saveGameToken = async function(e) {
+            e.preventDefault();
+            let tokenCode = document.getElementById('tCode').value.trim().toUpperCase();
+            let newToken = {
+                title: document.getElementById('tTitle').value.trim(),
+                token: tokenCode,
+                kelas: parseInt(document.getElementById('tKelas').value) || 7,
+                materi: document.getElementById('tokenMateriSelect').value,
+                soalCount: parseInt(document.getElementById('tSoal').value) || 10,
+                timer: parseInt(document.getElementById('tTimer').value) || 10,
+                questionIds: window._tempTokenQuestions || []
+            };
+            await syncSave('tokens', tokenCode, newToken);
+            document.querySelector('.fixed').remove();
+            router.navigate('teacherDashboard');
+            alertBox("Sukses", "Token ujian sejarah berhasil diterbitkan ke Cloud.");
+        };
+
+        window.deleteGameToken = async function(token) {
+            confirmBox("Tarik Token?", `Yakin ingin menghapus token "${token}"?`, async () => {
+                await syncDelete('tokens', token);
+                router.navigate('teacherDashboard');
+            });
+        };
+
+        window.deleteResultRecord = async function(id) {
+            confirmBox("Hapus Nilai?", "Hapus riwayat nilai siswa ini?", async () => {
+                await syncDelete('results', id);
+                router.navigate('teacherDashboard');
+            });
+        };
+
+        window.clearAllResults = async function() {
+            confirmBox("Kosongkan Semua Nilai?", "Menghapus permanen seluruh riwayat skor SKI dari sistem. Yakin?", async () => {
+                if (window.firebaseDb && window.firebaseHelpers) {
+                    let currentRes = getActiveResults();
+                    for (let r of currentRes) {
+                        if (r.id) {
+                            const docRef = window.firebaseHelpers.doc(window.firebaseDb, `ski_results`, r.id);
+                            await window.firebaseHelpers.deleteDoc(docRef).catch(e=>console.log(e));
+                        }
+                    }
+                }
+                
+                State.cloudResults = [];
+                localStorage.removeItem('ski_tts_results_fb');
+                router.navigate('teacherDashboard');
+            });
+        };
+
+        window.openUserModal = function() {
+            let modal = document.createElement('div');
+            modal.className = "fixed inset-0 bg-brand-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4";
+            modal.innerHTML = `
+                <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full space-y-6 border border-brand-100">
+                    <h3 class="font-black text-brand-900 text-lg">Akun Guru Baru</h3>
+                    <form onsubmit="saveUserAccount(event)" class="space-y-4 text-xs font-semibold text-brand-800">
+                        <div>
+                            <label class="block mb-1">Nama / Gelar</label>
+                            <input type="text" id="uName" required placeholder="Bapak Budi" class="w-full p-2.5 rounded-xl border focus:ring-2 focus:ring-brand-500">
+                        </div>
+                        <div>
+                            <label class="block mb-1">Username Login</label>
+                            <input type="text" id="uUser" required placeholder="budi_ski" class="w-full p-2.5 rounded-xl border font-mono focus:ring-2 focus:ring-brand-500">
+                        </div>
+                        <div>
+                            <label class="block mb-1">Kata Sandi (Password)</label>
+                            <input type="password" id="uPass" required placeholder="Buat password" class="w-full p-2.5 rounded-xl border focus:ring-2 focus:ring-brand-500">
+                        </div>
+                        <div class="pt-4 flex gap-3 justify-end">
+                            <button type="button" onclick="this.closest('.fixed').remove()" class="px-4 py-2.5 bg-slate-100 border text-slate-700 font-bold rounded-xl">Batal</button>
+                            <button type="submit" class="px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow">Tambahkan</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        };
+
+        window.openChangePasswordModal = function(username) {
+            let modal = document.createElement('div');
+            modal.className = "fixed inset-0 bg-brand-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4";
+            modal.innerHTML = `
+                <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full space-y-6 border border-brand-100">
+                    <h3 class="font-black text-brand-900 text-lg">Ganti Sandi Akun: <br><span class="text-amber-500 font-mono text-sm">${username}</span></h3>
+                    <form onsubmit="saveNewPassword(event, '${username}')" class="space-y-4 text-xs font-semibold text-brand-800">
+                        <div>
+                            <label class="block mb-1">Password Baru</label>
+                            <input type="password" id="newPass" required placeholder="Masukkan kata sandi baru" class="w-full p-2.5 rounded-xl border focus:ring-2 focus:ring-brand-500">
+                        </div>
+                        <div class="pt-4 flex gap-3 justify-end">
+                            <button type="button" onclick="this.closest('.fixed').remove()" class="px-4 py-2.5 bg-slate-100 border text-slate-700 font-bold rounded-xl">Batal</button>
+                            <button type="submit" class="px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow">Terapkan</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        };
+
+        window.saveNewPassword = async function(e, username) {
+            e.preventDefault();
+            let newPass = document.getElementById('newPass').value.trim();
+            let users = getActiveUsers();
+            let u = users.find(item => item.username === username);
+            if (u) {
+                u.password = newPass;
+                await syncSave('users', username, u);
+                document.querySelector('.fixed').remove();
+                router.navigate('teacherDashboard');
+                alertBox("Selesai", "Kata sandi akun guru telah diperbarui.");
+            }
+        };
+
+        window.saveUserAccount = async function(e) {
+            e.preventDefault();
+            let username = document.getElementById('uUser').value.trim();
+            if(getActiveUsers().find(u => u.username === username)) {
+                alertBox("Gagal", "Username sudah dipakai.");
+                return;
+            }
+            let newUser = {
+                name: document.getElementById('uName').value.trim(),
+                username: username,
+                password: document.getElementById('uPass').value.trim(),
+                role: 'teacher'
+            };
+            await syncSave('users', username, newUser);
+            document.querySelector('.fixed').remove();
+            router.navigate('teacherDashboard');
+            alertBox("Sukses", "Akun pengajar SKI baru aktif.");
+        };
+
+        window.deleteUser = async function(username) {
+            confirmBox("Cabut Akses?", `Hapus akun "${username}"?`, async () => {
+                await syncDelete('users', username);
+                router.navigate('teacherDashboard');
+            });
+        };
+
+        function alertBox(title, message) {
+            let modal = document.createElement('div');
+            modal.className = "fixed inset-0 bg-brand-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-pop";
+            modal.innerHTML = `
+                <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-sm w-full space-y-4 text-center border border-brand-100">
+                    <h3 class="font-bold text-lg text-brand-900">${title}</h3>
+                    <p class="text-sm text-slate-600">${message}</p>
+                    <button onclick="this.closest('.fixed').remove()" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl transition shadow">OK / Paham</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        window.router = router;
+        window.selectCell = selectCell;
+        window.handleCellInput = handleCellInput;
+        window.handleCellKeydown = handleCellKeydown;
+        window.focusWord = focusWord;
+        window.useHint = useHint;
+        window.finishGameConfirm = finishGameConfirm;
+        window.handleTeacherLogin = handleTeacherLogin;
+        window.updateTokenMaterialsAndPreview = updateTokenMaterialsAndPreview;
+        window.updateTokenQuestionPreview = updateTokenQuestionPreview;
+        window.previewTokenQuestions = previewTokenQuestions;
+        window.updateModalMaterials = updateModalMaterials;
+        window.onTokenSelectChange = onTokenSelectChange;
+        window.filterAdminResults = filterAdminResults;
+
+        window.onload = function() {
+            renderApp();
+            loadDataFromFirebase();
+        };
+    </script>
+</body>
+</html>
